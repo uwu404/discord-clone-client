@@ -1,0 +1,258 @@
+.online,
+.all,
+.add-friend,
+.pending{
+    position: relative;
+    height: 25px;
+    margin-left: 8px;
+    left: 10px;
+    background-color: transparent;
+    border: none;
+    border-radius: 3px;
+    padding: 0 8px;
+    color: var(--font-secondary);
+    font-size: 15px;
+    transition: 0.2s;
+    font-weight: 500;
+}
+.name-online .online{
+    color: var(--font-primary);
+    background-color: var(--background-hover);
+}
+.name-add .add-friend{
+    background-color: var(--background-hover);
+    color: var(--green-hover);
+}
+.name-all .all{
+    color: var(--font-primary);
+    background-color: var(--background-hover);
+}
+.name-pending .pending{
+    color: var(--font-primary);
+    background-color: var(--background-hover);
+}
+.add-friend{
+    background-color: var(--green);
+    color: white;
+}
+.online:hover,
+.all:hover,
+.pending:hover{
+    background-color: var(--background-hover);
+}
+.wrapper{
+    width: 100%;
+    position: absolute;
+    height: calc(100% - 50px);
+    top: 50px;
+}
+.fake-after:not(:empty):after{
+    content: "#0000";
+    color: var(--font-secondary);
+}
+.fake-after.fake-after{
+    pointer-events: none;
+    user-select: none;
+    line-height: 30px;
+    border: 1px transparent solid;
+    color: transparent;
+}
+.add-friend-input input{
+    background-color: var(--background-secondary);
+}
+.add-friend-input input, 
+.fake-after{
+    width: calc(100% - 42px);
+    border: 1px var(--background-tertiary) solid;
+    padding: 10px 20px;
+    height: 30px;
+    color: var(--font-primary);
+    white-space: pre;
+    position: absolute;
+    font-size: 17px;
+    font-weight: 400;
+    top: 0; left: 0;
+    outline: none;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.add-friend-input{
+    position: relative;
+    width: calc(100% - 40px);
+    left: 20px;
+    height: 50px;
+    min-width: 300px;
+}
+.dumb-text-3{
+    color: var(--font-secondary);
+    position: relative;
+    left: 20px;
+}
+.invite{
+    padding-bottom: 40px;
+    user-select: none;
+    border-bottom: 1px var(--background-secondary) solid;
+}
+.h3-add{
+    position: relative;
+    left: 20px;
+    color: var(--font-primary);
+}
+.dm-start{
+    width: calc(100% - 40px);
+    left: 20px;
+    margin-top: 40px;
+    position: relative;
+    border-bottom: 1px var(--font-background) solid;
+    user-select: none;
+}
+.dm-avatar{
+    border-radius: 50%;
+    -webkit-user-drag: none;
+}
+.dm-username{
+    font-size: 25px;
+    margin-bottom: 0;
+    margin-top: 10px;
+    color: var(--font-primary);
+}
+.dumb-text-2{
+    color: var(--font-secondary);
+    margin-top: 7px;
+    margin-bottom: 10px;
+}
+.dumb-text-2 span{
+    font-weight: 600;
+}
+.send-friend-request{
+    position: absolute;
+    z-index: 2;
+    border: none;
+    background-color: var(--blue);
+    right: 10px;
+    border-radius: 5px;
+    color: white;
+    top: 8px;
+    font-weight: 500;
+    margin: 0;
+    padding: 3px 15px;
+    height: 35px;
+    font-size: 15px;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+.send-friend-request.valid{
+    cursor: pointer;
+    opacity: 1;
+}
+.list{
+    width: calc(100% - 7px);
+    height: calc(100% - 40px);
+    overflow-y: scroll;
+    position: absolute;
+    top: 40px;
+    left: 0;
+}
+.list::-webkit-scrollbar-track-piece:end{
+    margin-bottom: 10px;
+}
+.list::-webkit-scrollbar-track-piece:start{
+    margin-top: 0;
+}
+.home-title{
+    color: var(--font-secondary);
+    position: absolute;
+    left: 13px;
+    top: 14px;
+    margin: 0;
+    user-select: none;
+    font-size: 13px;
+}
+.friend{
+    width: calc(100% - 20px);
+    position: relative;
+    left: 10px;
+    display: block;
+    height: 65px;
+    border-radius: 5px;
+}
+.friend:hover{
+    background-color: var(--background-hover);
+}
+.friend::after{
+    content: "";
+    width: calc(100% - 10px);
+    left: 5px;
+    position: absolute;
+    background-color: var(--font-background);
+    height: 1px;
+    top: 0;
+}
+.friend:hover::after{
+    display: none;
+}
+.friend-pfp{
+    border-radius: 50%;
+    position: absolute;
+    left: 15px;
+    -webkit-user-drag: none;
+    top: 10px;
+}
+.friend-name{
+    color: var(--font-primary);
+    position: absolute;
+    left: 73px;
+    top: 13px;
+    user-select: none;
+    margin: 0;
+    font-size: 15px;
+}
+.friend-name span{
+    font-weight: 400;
+    color: var(--font-secondary);
+    display: none;
+}
+.friend:hover .friend-name span{
+    display: initial;
+}
+.accept{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+    border: none;
+    background-color: var(--background-secondary);
+    top: 15px;
+    text-align: center;
+    line-height: 35px;
+    color: var(--font-secondary);
+    user-select: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+.accept svg{
+    top: 0; left: 0;
+    right: 0; bottom: 0;
+    margin: auto;
+    position: absolute;
+    fill: var(--font-secondary);
+}
+.accept:hover{
+    color: var(--font-primary);
+}
+.accept:hover svg{
+    fill: var(--green);
+}
+.friend:hover .accept{
+    background-color: var(--background-tertiary);
+}
+.state{
+    color: var(--font-secondary);
+    position: absolute;
+    left: 73px;
+    font-size: 15px;
+    top: 21px;
+    user-select: none;
+}

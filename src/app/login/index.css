@@ -1,0 +1,82 @@
+.login{
+    height: 400px;
+    position: fixed;
+    top: calc(50% - 202px);
+    width: 600px;
+    background-color: var(--background-primary);
+    transition: 0.3s;
+    overflow: hidden;
+    left: calc(50% - 302px);
+    box-shadow: 0 0 10px 8px rgba(0, 0, 0, 0.062);
+    border-radius: 10px;
+    text-align: center;
+}
+.button-login{
+    background: var(--purple);
+    border-radius: 3px;
+    font-size: 17px;
+    color: white;
+    height: 35px;
+    bottom: 46px;
+    width: 57%;
+    height: 50px;
+    margin-top: 10px;
+    border: none;
+}
+.no-account span{
+    color: var(--blue);
+    cursor: pointer;
+}
+.no-account span:hover{
+    text-decoration: underline;
+}
+.login-input{
+    width: 57%;
+    height: 50px;
+    outline: none;
+    position: relative;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    background-color: var(--font-background);
+    padding: 0 25px;
+}
+.password{
+    top: 50%;
+}
+.email{
+    top: 33%;
+}
+
+.login-text{
+    position: relative;
+    font-size: 30px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.expand-me{
+    transition: 0.2s;
+    transform: scaleY(1.3);
+}
+.expand-me *{
+    transition: 0.1s;
+    opacity: 0;
+}
+.expand-all{
+    transition: 0.3s;
+    transform: scale(3);
+}
+.expand-all *{
+    transition: 0.15s;
+    opacity: 0;
+}
+
+.waiting{
+    filter: brightness(0.6);
+    pointer-events: none;
+}
+.error-message{
+    color: var(--red);
+}

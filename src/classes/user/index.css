@@ -1,0 +1,584 @@
+
+.darken{
+    position: fixed;
+    top: 0;
+    transition: 0.3s;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+.darken.slide{
+    background-color: rgba(0, 0, 0, 0.671);
+    pointer-events: all;
+}
+.owner.owner{
+    color: var(--yellow);
+}
+.my-pfp{
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    position: absolute;
+    left: 13px;
+    -webkit-user-drag: none;
+    transition: 0.2s;
+    top: 7px;
+    cursor: pointer;
+}
+.my-pfp:hover{
+    filter: brightness(0.6);
+}
+.my-username{
+    position: absolute;
+    left: 56px;
+    margin: 0;
+    top: 8px;
+    user-select: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--font-primary);
+}
+.my-username span{
+    display: block;
+    color: var(--font-secondary);
+}
+.settings-button{
+    color: var(--font-secondary);
+    position: absolute;
+    width: 30px;
+    transition: 0.2s;
+    height: 30px;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+}
+.settings-button svg{
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+.settings-button:hover{
+    background-color: var(--background-hover);
+    border-radius: 5px;
+}
+
+@keyframes shift {
+    from {
+        opacity: 0.6;
+        transform: translateX(30px);
+    } to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+@keyframes reverseShift {
+    from {
+        opacity: 0.6;
+        transform: translateX(-30px);
+    } to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+.user-div{
+    position: fixed;
+    z-index: 1;
+    animation: shift 0.1s forwards;
+    background: var(--background-floating);
+    box-shadow: 0 0 9px 4px rgba(0, 0, 0, 0.100);
+    border-radius: 7px;
+    width: 280px;
+    padding-bottom: 7px;
+    overflow: hidden;
+    text-align: center;
+}
+.user-div::after{
+    content: "";
+    position: absolute;
+    background-color: var(--green-hover);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    top: 88px;
+    box-shadow: 0 0 0 4px var(--background-floating);
+    left: 160px;
+}
+.user-div.not-online::after{
+    background-color: var(--background-secondary);
+    width: 10px;
+    height: 10px;
+    border: 4px var(--font-secondary) solid;
+}
+.user-div::before{
+    content: "";
+    background: var(--cyan);
+    width: 100%;
+    height: 65px;
+    position: absolute;
+    top: 0; left: 0;
+}
+.user-username span{
+    color: var(--font-secondary);
+}
+.user-avatar{
+    border-radius: 50%;
+    position: relative;
+    top: 15px;
+    background-color: var(--background-secondary);
+    border: 6px var(--background-floating) solid;
+    -webkit-user-drag: none;
+    cursor: pointer;
+}
+.user-username{
+    font-size: 19px;
+    color: var(--font-primary);
+    margin-top: 18px;
+    margin-bottom: 20px;
+}
+.line{
+    position: absolute;
+    background-color: var(--background-primary);
+    height: 1px;
+}
+.line.first{
+    left: 5%;
+    width: 90%;
+    top: 155px;
+}
+.line.last{
+    left: 0;
+    width: 100%;
+}
+.note,
+.roles{
+    text-align: left;
+    width: calc(100% - 30px);
+    user-select: none;
+    position: relative;
+    left: 15px;
+    margin-top: 10px;
+}
+.roles{
+    margin-top: 30px;
+}
+.roles:last-child .line{
+    display: none;
+}
+.roles h5{
+    position: relative;
+    margin-top: -10px;
+    color: var(--font-secondary);
+    font-size: 13px;
+}
+.note h5{
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: var(--font-secondary);
+}
+.note textarea{
+    width: 100%;
+    height: fit-content;
+    resize: none;
+    box-sizing: border-box;
+    outline: none;
+    border-radius: 3px;
+    color: var(--font-primary);
+    border: none;
+    background-color: inherit;
+    transition: 0.2s;
+}
+.note textarea:focus{
+    background-color: var(--background-hover);
+}
+.role{
+    border-color: var(--green);
+    width: fit-content;
+    max-width: calc(100% - 28px);
+    overflow: hidden;
+    color: var(--font-primary);
+    padding: 4px 7px;
+    position: relative;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: var(--font-background);
+    bottom: 10px;
+    padding-left: 21px;
+    margin-right: 5px;
+    display: inline-block;
+    border-radius: 3px;
+}
+.role::before{
+    content: "";
+    width: 0;
+    height: 0;
+    top: 5px;
+    position: absolute;
+    left: 4px;
+    display: block;
+    border-radius: 50%;
+    border: 6px solid;
+    border-color: inherit;
+}
+.dm-user{
+    background-color: var(--background-primary);
+    border-radius: 3px;
+    outline: none;
+    border: none;
+    height: 40px;
+    box-sizing: border-box;
+    width: calc(100% - 30px);
+    padding: 0px 13px;
+    font-size: 15px;
+    color: var(--font-primary);
+    margin-top: 10px;
+    transition: 0.4s;
+    margin-bottom: 7px;
+}
+.dm-user:focus{
+    box-shadow: 0 0 0 1px var(--cyan);
+}
+.user-id{
+    color: var(--font-secondary);
+    font-size: 14px;
+    user-select: none;
+}
+.user-settings{
+    z-index: 6;
+    width: 600px;
+    background-color: var(--background-primary);
+    height: 400px;
+    top: 0; left: 0;
+    bottom: 0; right: 0;
+    border-radius: 8px;
+    margin: auto;
+    position: fixed;
+    overflow: hidden;
+}
+.user-avatar-selector{
+    width: 150px;
+    height: 150px;
+    left: 25px;
+    top: 15px;
+    border-radius: 50%;
+    position: absolute;
+    transition: 0.2s;
+}
+.user-avatar-selector:hover *{
+    transition: 0.4s;
+    filter: brightness(0.6);
+}
+.user-avatar-selector:hover::after{
+    content: "Change Avatar";
+    color: white;
+    z-index: 4;
+    font-size: 20px;
+    position: absolute;
+    pointer-events: none;
+    width: fit-content; height: fit-content;
+    inset: 0; margin: auto;
+}
+.avatar-config{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    left: 0;
+    cursor: pointer;
+}
+.avatar-config::-webkit-file-upload-button{
+    cursor: pointer;
+}
+.view-avatar{
+    border-radius: 50%;
+    object-fit: cover;
+}
+.user-overview{
+    background-color: var(--background-secondary);
+    width: 200px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    overflow: hidden;
+    top: 0;
+}
+.overview{
+    position: relative;
+    top: 175px;
+    left: 20px;
+    color: var(--font-primary);
+    height: calc(100% - 184px);
+}
+.overview h2{
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--font-secondary);
+    user-select: none;
+}
+.overview h3{
+    position: relative;
+    bottom: 10px;
+    height: 14px;
+    transition: 0.2s;
+    user-select: none;
+    width: fit-content;
+    margin-bottom: -6px;
+    font-weight: 400;
+    font-size: 14px;
+}
+.overview h3:empty::before{
+    content: attr(placeholder);
+    color: var(--red);
+}
+.logout{
+    border: none;
+    background-color: var(--red);
+    outline: none;
+    border-radius: 4px;
+    width: 80%;
+    height: 35px;
+    color: white;
+    font-weight: 600;
+    position: absolute;
+    bottom: 18px;
+    transition: 0.4s;
+}
+.logout:hover{
+    background-color: var(--red-hover);
+}
+.view-password:hover{
+    cursor: pointer;
+    color: var(--green);
+}
+.user-editor{
+    height: 100%;
+    width: 400px;
+    left: 200px;
+    position: absolute;
+}
+.user-editor input{
+    width: 270px;
+    background-color: var(--font-background);
+    height: 40px;
+    border-radius: 7px;
+    border: none;
+    outline: none;
+    color: var(--font-primary);
+    font-size: 16px;
+    position: relative;
+    padding: 0 15px;
+    left: 25px;
+    margin-top: 5px;
+}
+.customize{
+    position: relative;
+    left: 27px;
+    color: var(--font-primary);
+    user-select: none;
+}
+.logout-2,
+.save-profile,
+.cancel-profile{
+    height: 35px;
+    outline: none;
+    position: absolute;
+    color: white;
+    bottom: 18px;
+    font-weight: 600;
+    transition: 0.2s;
+    border-radius: 4px;
+    border: none;
+    width: 80px;
+}
+.logout-2{
+    background-color: var(--red);
+    left: 205px;
+    display: none;
+    width: 110px;
+}
+.logout-2:hover{
+    background-color: var(--red-hover);
+}
+.save-profile{
+    background-color: var(--green);
+    left: 25px;
+}
+.save-profile:hover{
+    background-color: var(--green-hover);
+}
+.cancel-profile{
+    left: 115px;
+    background-color: var(--background-tertiary);
+}
+.cancel-profile:hover{
+    background-color: var(--background-secondary);
+}
+.user-buttons{
+    position: absolute;
+    width: 100%;
+    top: 180px;
+    left: 0;
+}
+.user-buttons button{
+    width: 116px;
+    height: 116px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 16px;
+    position: relative;
+    left: 10px; top: 10px;
+    font-weight: 500;
+    transition: 0.4s;
+}
+.click-settings{
+    background-color: var(--blue);
+}
+.click-settings svg{
+    transform: scale(0.9);
+    fill: white;
+}
+.click-settings:hover{
+    background-color: rgb(37, 50, 148);
+}
+.is-not-edited .save-profile{
+    cursor: not-allowed;
+    background-color: var(--background-tertiary);
+}
+.current-theme{
+    color: var(--font-primary);
+    position: relative;
+    left: 100px; bottom: 47px;
+    user-select: none;
+    font-variant: small-caps;
+    font-size: 19px;
+}
+.member{
+    user-select: none;
+    display: block;
+    cursor: pointer;
+    width: calc(100% - 8px);
+    border-radius: 3px;
+    position: relative;
+    left: 6px;
+    height: 46px;
+}
+.member::before{
+    content: "";
+    display: block;
+    width: 11px;
+    height: 11px;
+    background-color: var(--green-hover);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 5px;
+    left: 38px;
+    box-shadow: 0 0 0 3px var(--background-secondary);
+    z-index: 2;
+}
+.member.member-offline::before{
+    width: 6px;
+    height: 6px;
+    left: 37px;
+    border: 3px var(--font-secondary) solid;
+    background-color: var(--background-primary);
+}
+.member-offline{
+    opacity: 0.8;
+}
+.member:hover::before, .member-clicked::before{
+    box-shadow: 0 0 0 3px var(--background-secondary-hover);
+}
+.member:hover, .member-clicked{
+    background-color: var(--background-secondary-hover);
+    opacity: 1;
+}
+.member-clicked{
+    pointer-events: none;
+}
+.member-icon{
+    border-radius: 50%;
+    -webkit-user-drag: none;
+    position: relative;
+    top: 4px;
+    left: 8px;
+}
+.nice-div{
+    position: absolute;
+    left: 58px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: fit-content;
+}
+.member-name{
+    color: var(--font-primary);
+    margin: 0;
+    position: relative;
+    font-weight: 500;
+    font-size: 15px;
+}
+.is-online{
+    color: var(--font-secondary);
+    font-size: 14px;
+    position: relative;
+    margin: 0;
+    margin-top: 2px;
+}
+.members-title{
+    color: var(--font-secondary);
+    margin-top: 20px;
+    margin-bottom: 2px;
+    position: relative;
+    left: 12px;
+    user-select: none;
+    font-size: 12px;
+    font-weight: 600;
+}
+.light-theme{
+    background-color: rgb(211, 211, 223);
+    border-radius: 3px;
+    border: 2px rgb(211, 211, 223) solid;
+    font-size: 12px;
+    font-weight: 600;
+    width: fit-content; height: fit-content;
+    padding: 3px 5px;
+    position: absolute; left: 27px;
+    user-select: none;
+    color: rgb(22, 0, 4);
+    cursor: pointer;
+}
+.light-theme.light{
+    border-color: var(--blue);
+}
+.dark-theme{
+    cursor: pointer;
+    background-color: rgb(32, 32, 41);
+    border-radius: 3px;
+    border: 2px rgb(32, 32, 41) solid;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgb(231, 228, 229);
+    width: fit-content; height: fit-content;
+    padding: 3px 5px;
+    position: absolute; left: 80px;
+    user-select: none;
+}
+.dark-theme.dark{
+    border-color: var(--blue);
+}
+.footer{
+    width: 250px;
+    height: 50px;
+    background-color: var(--background-xx);
+    position: fixed;
+    left: 69px;
+    bottom: 0;
+}

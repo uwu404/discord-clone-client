@@ -1,0 +1,46 @@
+.channel{
+    height: 35px;
+    line-height: 35px;
+    border-radius: 3px;
+    width: calc(100% - 5px);
+    left: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+    user-select: none;
+    position: relative;
+    color: var(--font-primary);
+    font-weight: 500;
+}
+.channel span{
+    position: absolute;
+    left: 32px;
+}
+.channel svg{
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    fill: var(--font-secondary);
+}
+.channel:hover:not(.c-clicked){
+    background-color: var(--background-secondary-hover);
+}
+.c-clicked{
+    background-color: var(--background-hover);
+}
+.channel-title span{
+    font-weight: 500;
+    color: var(--font-primary);
+    user-select: none;
+    position: relative;
+    left: 4px;
+    font-size: 17px;
+}
+.channel-title svg{
+    fill: var(--font-secondary);
+    position: relative;
+    top: 8px;
+}
+.channel-title{
+    position: absolute;
+    left: 20px;
+}

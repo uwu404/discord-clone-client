@@ -1,0 +1,257 @@
+.platform{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: var(--purple);
+}
+.messages{
+    background-color: var(--background-primary);
+    width: calc(100% - 319px);
+    height: 100%;
+    position: fixed;
+    border-left: 1px var(--background-secondary) solid;
+    bottom: 0;
+    overflow: hidden;
+    left: 319px;
+}
+.navigate{
+    background-color: var(--background-tertiary);
+    width: 69px;
+    overflow-y: scroll;
+    overflow-x: visible;
+    scrollbar-width: none;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+.navigate::-webkit-scrollbar{
+    display: none;
+}
+.name{
+    height: 50px;
+    position: absolute;
+    line-height: 50px;
+    box-shadow: 1px 0 0 1px var(--shadow);
+    top: 0; left: 0;
+    z-index: 1;
+    min-width: max-content;
+    width: 100%;
+    background: var(--background-primary);
+}
+.channels{
+    width: 250px;
+    position: fixed;
+    left: 69px;
+    top: 51px;
+    display: block;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: calc(100% - 101px);
+    background-color: var(--background-secondary);
+}
+.members::-webkit-scrollbar,
+.channels::-webkit-scrollbar{
+    visibility: hidden;
+    width: 5px;
+    background-color: var(--background-secondary);
+}
+.members:hover::-webkit-scrollbar,
+.channels:hover::-webkit-scrollbar{
+    visibility: visible;
+}
+.members::-webkit-scrollbar-thumb,
+.channels::-webkit-scrollbar-thumb{
+    background-color: var(--background-tertiary);
+}
+.server-name{
+    height: 50px;
+    width: 250px;
+    position: fixed;
+    left: 69px;
+    top: 0;
+    user-select: none;
+    background-color: var(--background-secondary);
+    border-bottom: 1px var(--background-tertiary) solid;
+}
+.server-name span{
+    color: var(--font-primary);
+    font-size: 16px;
+    font-weight: 600;
+    top: 15px;
+    position: relative; 
+    left: 14px;
+}
+.messages-main{
+    position: absolute;
+    left: 0;
+    width: calc(100% - 250px);
+    height: calc(100% - 50px);
+    top: 50px;
+}
+.users{
+    background-color: var(--background-secondary);
+    height: 100%;
+    position: absolute;
+    width: 250px;
+    top: 50px;
+    left: calc(100% - 250px);
+}
+.controll{
+    width: calc(100% - 40px);
+    position: absolute;
+    left: 20px;
+    bottom: 25px;
+}
+.not-input{
+    width: 100%;
+    padding: 13px 22px;
+    padding-left: 50px;
+    color: var(--font-primary);
+    box-sizing: border-box;
+    font-size: 15px;
+    background-color: var(--font-background);
+    border-radius: 6px;
+    font-weight: 400;
+    outline: none;
+    overflow-x: hidden;
+}
+.not-input:empty::before{
+    content: attr(placeholder);
+    white-space: nowrap;
+    overflow: hidden;
+    color: rgb(101, 101, 122);
+    cursor: text;
+}
+.attach-file{
+    height: 20px;
+    font-size: 40px;
+    color: var(--font-background);
+    left: 15px;
+    user-select: none;
+    background-color: var(--font-secondary);
+    cursor: pointer;
+    width: 20px;
+    position: absolute;
+    border-radius: 50%;
+    top: 12px;
+}
+.attach-file:hover{
+    background-color: var(--font-primary);
+}
+.attach-file svg{
+    position: absolute;
+    left: 0; right: 0;
+    pointer-events: none;
+    top: 0; bottom: 0;
+    margin: auto;
+}
+.attach-file input{
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+    height: 100%;
+    border-radius: 50%;
+    top: 0; left: 0;
+}
+.attach-file input::-webkit-file-upload-button{
+    cursor: pointer;
+}
+.home-button{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    transition: 0.2s;
+    background: var(--background-primary);
+}
+.home-button.isclicked,
+.home-button:hover{
+    background-color: var(--blue);
+    border-radius: 16px;
+}
+.home-button:active{
+    top: 1px;
+}
+.home-button svg{
+    transition: 0.2s;
+    position: absolute;
+    fill: var(--font-primary);
+    top: 0;
+    width: 35px;
+    height: 35px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+.border-bottom{
+    width: 40px;
+    background: var(--background-secondary);
+    height: 2px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    position: relative;
+    left: calc(50% - (40px/2));
+}
+.home-button:hover{
+    transform: scale(1);
+}
+.chat{
+    position: absolute;
+    width: calc(100% - 7px);
+    left: 0;
+    height: calc(100% - 60px);
+    top: 0;
+    overflow-y: scroll;
+    scrollbar-color: var(--background-tertiary) var(--background-secondary);
+    scrollbar-width: thin;
+    overflow-x: hidden;
+}
+@media only screen and (max-width: 600px) {
+    .messages-main{
+        width: 100%;
+    }
+    .users{
+        display: none;
+    }
+    .controll{
+        width: calc(100% - 40px - 72px);
+        left: 20px;
+    }
+}
+.chat::-webkit-scrollbar, .list::-webkit-scrollbar{
+    display: block;
+    width: 8px;
+}
+.chat::-webkit-scrollbar-track, .list::-webkit-scrollbar-track{
+    background: transparent;
+}
+.chat::-webkit-scrollbar-track-piece, .list::-webkit-scrollbar-track-piece{
+    background: var(--background-secondary);
+    border-radius: 8px;
+}
+.chat::-webkit-scrollbar-track-piece:end{
+    margin-bottom: 23px;
+}
+.chat::-webkit-scrollbar-track-piece:start, .list::-webkit-scrollbar-track-piece:start{
+    margin-top: 10px;
+}
+.chat::-webkit-scrollbar-thumb{
+    background: var(--background-tertiary);
+    border-radius: 8px;
+}
+.scroller{
+    height: 30px;
+}
+.members{
+    position: absolute;
+    left: 0; top: 0;
+    background-color: var(--background-secondary);
+    width: 100%; height: 100%;
+    overflow-y: scroll;
+}

@@ -1,0 +1,18 @@
+.signup-text{
+    margin-left: -5px;
+}
+.signup{
+    height: 520px;
+    top: calc(50% - 260px);
+}
+
+
+.shrink-me{
+    transition: 0.2s;
+    transform: scaleY(0.77);
+}
+
+.shrink-me *{
+    transition: 0.1s;
+    opacity: 0;
+}

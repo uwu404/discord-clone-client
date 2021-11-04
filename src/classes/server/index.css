@@ -1,0 +1,274 @@
+.server-icon{
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    transition: 0.2s;
+    -webkit-user-drag: none;
+    background-color: var(--background-primary);
+}
+.server-icon:active{
+    top: 1px;
+}
+.add-server-border,
+.server{
+    width: 50px;
+    height: 50px;
+    position: relative;
+    left: calc(50% - (50px/2));
+    border-radius: 50%;
+    margin-bottom: 7px;
+}
+.add-server-border::before,
+.server::before{
+    content: "";
+    width: 4px;
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+    height: 10px;
+    position: absolute;
+    top: 50%;
+    transform-origin: 0 0;
+    left: -10px;
+    transform: translateY(-50%) scaleX(0);
+    background-color: var(--font-primary);
+    transition: 0.2s;
+}
+.add-server-border:hover::before,
+.server:hover::before{
+    height: 18px;
+    transform: translateY(-50%) scaleX(1);
+}
+.add-server-border.add-clicked::before,
+.server.click::before{
+    height: 38px;
+    transform: translateY(-50%) scaleX(1);
+}
+.server.click img,
+.server-icon:hover{
+    border-radius: 16px;
+    background-color: var(--blue);
+}
+.add-server{
+    background: var(--background-primary);
+    border-radius: 50%;
+    position: relative;
+    transition: 0.2s;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 500;
+    color: var(--green);
+    width: 50px;
+    height: 50px;
+}
+.add-server svg{
+    top: 50%;
+    left: 50%;
+    transition: 0.2s;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+.add-server-border.add-clicked .add-server,
+.add-server:hover{
+    border-radius: 16px;
+    background-color: var(--green);
+    color: var(--background-primary);
+}
+.add-server:active{
+    top: 1px;
+}
+.creator{
+    position: fixed;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    margin: auto;
+    width: 410px;
+    overflow: hidden;
+    border-radius: 5px;
+    height: 390px;
+    background-color: aliceblue;
+    z-index: 3;
+}
+.creator svg{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: rgb(157, 156, 170);
+    cursor: pointer;
+    transform: rotate(0.125turn);
+    stroke-width: 5px;
+    stroke: aliceblue;
+}
+.creator h2{
+    margin-top: 19px;
+    color: black;
+}
+.dummy-text{
+    color: black;
+    margin-top: -4px;
+    margin-left: 40px;
+    margin-right: 40px;
+    font-size: 14px;
+}
+.selector{
+    width: 80px; height: 80px;
+    border: 4px var(--background-tertiary) dashed;
+    border-radius: 50%;
+    background: aliceblue;
+    overflow: hidden;
+    position: absolute;
+    top: 120px; left: calc(50% - 42px);
+}
+.selector::before{
+    content: "Upload";
+    color: var(--background-tertiary);
+    inset: 0;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+    position: absolute;
+    font-size: 18px;
+    z-index: 0;
+    font-weight: 900;
+}
+.select-icon{
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+    height: 100%;
+    border-radius: 50%;
+    top: 0;
+    left: 0;
+}
+.select-icon::-webkit-file-upload-button{
+    cursor: pointer;
+}
+.my-icon{
+    width: 100%;
+    z-index: 1;
+    height: 100%;
+    background-color: white;
+    position: absolute;
+    object-fit: cover;
+    left: 0;
+    top: 0;
+}
+.my-icon[src=""]{
+    display: none;
+}
+.select-server-name{
+    position: absolute;
+    bottom: 85px;
+    background-color: rgb(232, 239, 247);
+    outline: none;
+    color: black;
+    font-size: 16px;
+    border: 1px rgb(187, 187, 187) solid;
+    border-radius: 5px;
+    width: calc(94% - 30px);
+    left: 3%;
+    transition: 0.2s;
+    padding: 4px 15px;
+    height: 35px;
+}
+.select-server-name:focus{
+    border-color: var(--cyan);
+}
+.select-server-name:invalid{
+    border-color: var(--red);
+}
+label[for="server"]{
+    color: var(--background-tertiary);
+    font-weight: 600;
+    font-size: 14px;
+    position: absolute;
+    left: 3%;
+    bottom: 133px;
+}
+.dark-div{
+    background-color: rgba(0, 0, 0, 0.671);
+    position: fixed;
+    top: 0; left: 0;
+    bottom: 0; right: 0;
+    z-index: 3;
+}
+.view-server{
+    position: absolute;
+    height: 40%;
+    user-select: none;
+    color: var(--font-primary);
+    text-align: center;
+    top: 0;
+    width: 100%;
+}
+.create-server{
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 70px;
+    background: var(--background-secondary);
+}
+.creator .create-server{
+    background-color: rgb(231, 239, 247);
+}
+.create-server-button{
+    position: absolute;
+    width: 95px;
+    border: none;
+    border-radius: 3px;
+    font-size: 14px;
+    color: white;
+    font-weight: 500;
+    transition: 0.2s;
+    right: 5%;
+    top: 50%; transform: translateY(-50%);
+    background: var(--green);
+    height: 38px;
+}
+.create-server-button:hover{
+    background-color: var(--green-hover);
+}
+.creator .create-server-button{
+    right: 3%;
+}
+.cancel-creating{
+    right: 135px; 
+    width: fit-content;
+    height: fit-content;
+    background: transparent;
+    color: black;
+}
+.creator .cancel-creating{
+    right: auto;
+    left: 3%;
+}
+.cancel-creating:hover{
+    background-color: transparent;
+    text-decoration: underline;
+}
+.search-input{
+    width: 100%;
+    overflow: hidden;
+    height: 50px;
+    position: absolute;
+    top: 0;
+    background-color: var(--background-primary);
+    color: var(--font-primary);
+    border-bottom: 1px var(--background-tertiary) solid;
+}
+.search-input input{
+    background-color: var(--background-secondary);
+    width: 80%;
+    position: absolute;
+    left: 0;
+    border: none;
+    border-radius: 3px;
+    outline: none;
+    color: var(--font-primary);
+    top: 50%;
+    height: 25px;
+    padding: 2px 5px;
+    transition: 0.2s;
+    transform: translateY(-50%);
+    font-size: 14px;
+}
