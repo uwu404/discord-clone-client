@@ -1,6 +1,2 @@
-# discord-clone-client
-WARNING
-YOU MAY ENCOUTER ERRORS WHEN CREATING A NEW ACCOUNT 
-THIS PROJECT IS STILL IN WORK 
-A NEW VERSION IS COMING SOON
-
+This repository contains the source for discord-nodejs-clone
+> view: https://github.com/uwu404/discord-nodejs-clone to know more about this project
