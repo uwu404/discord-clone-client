@@ -1,41 +1,80 @@
 .message-div{
     position: relative;
-    padding-top: 3px;
+    padding-top: 0.2em;
     width: 100%;
-    padding-bottom: 4px;
+    padding-bottom: 0.2em;
     color: var(--font-primary);
     font-size: 15px;
+    --hover: rgba(0, 0, 0, 0.041);
+}
+.message-div:target::after{
+   content: "";
+   background-color: var(--blue);
+   position: absolute;
+   top: 0; bottom: 0; left: 0;
+   width: 3px;
+}
+.message-div:target:before{
+    content: "";
+    background-color: var(--blue);
+    position: absolute;
+    inset: 0;
+    opacity: 0.2;
+}
+.message-div:not(.min){
+    display: inline-flex;
+    align-items: flex-start;
 }
 .author-icon{
     border-radius: 50%;
-    position: absolute;
-    top: 4px;
     cursor: pointer;
-    left: 20px;
+    margin-left: 17px;
+    align-self: flex-start;
+    position: relative;
+    margin-top: 1px;
     transition: 0.1s;
 }
 .author-icon:hover{
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.048);
 }
 .author-icon:active{
-    top: 5px;
+    top: 1px;
+}
+.timestamp{
+    align-self: flex-start;
+    color: var(--font-secondary);
+    margin-left: 21px;
+    margin-right: 4px;
+    font-size: 13px;
+    display: inline-block;
+    margin-top: 4px;
+    user-select: none;
+    visibility: hidden;
 }
 .message-content{
     display: inline-block;
     position: relative;
-    margin-left: 74px;
-    word-wrap: break-word;
-    word-break: break-all;
-    margin-bottom: -14px;
+    white-space: break-spaces;
+    overflow-wrap: break-word;
+    margin: 0 15px;
+    top: 1px;
+    flex-grow: 1;
+    min-width: 0;
+}
+.content-url{
+    color: var(--cyan);
+    text-decoration: none;
+}
+.content-url:hover{
+    text-decoration: underline;
 }
 .author-name{
     font-weight: 500;
-    font-size: 15px;
     color: var(--font-primary);
     margin-top: 1px;
-    width: fit-content;
+    width: min-content;
     cursor: pointer;
-    margin-bottom: -11px;
+    line-height: 1.4em;
 }
 .exact-author:hover{
     text-decoration: underline;
@@ -45,42 +84,20 @@
     color: var(--font-secondary);
     cursor: default;
     font-weight: 400;
-    position: relative;
-    left: 10px;
+    margin-left: 10px;
 }
-.message-div:hover{
-    background: rgba(0, 0, 0, 0.050);
-}
-div[theme="dark"] .message-div:hover{
-    background: rgba(0, 0, 0, 0.068);
-}
-
-.min-text{
-    margin-top: 0;
-    margin-bottom: 0;
-    word-wrap: break-word;
-    position: relative;
-    margin-left: 74px;
-    font-weight: 400;
+.message-div:is(:focus-within, .clicked, :hover){
+    background: var(--background-primary-hover);
 }
 .text{
     position: relative;
     margin-bottom: 1px;
     font-weight: 400;
-}
-.createdAt{
-    position: absolute;
-    left: 24px;
-    font-size: 13px;
-    top: 6px;
-    margin-top: 0;
-    color: var(--font-secondary);
-    font-weight: 400;
-    display: none;
-    user-select: none;
-}
-.message-div:hover .createdAt{
     display: block;
+    line-height: 1.4em;
+}
+.message-div:hover .timestamp{
+    visibility: visible;
 }
 
 .message-attachment{
@@ -88,52 +105,27 @@ div[theme="dark"] .message-div:hover{
     margin-top: 3px;
     margin-bottom: -1px;
     cursor: pointer;
+    z-index: 2;
+    position: relative;
 }
 .image-div{
     position: relative;
     width: fit-content;
     height: fit-content;
-}
-.min .image-div{
-    position: relative;
-    margin-left: 74px;
+    z-index: 0;
 }
 .failed-tosend.failed-tosend.failed-tosend{
     color: var(--red);
 }
 
-@keyframes bigger{
-    0% {
-        opacity: 0.4;
-        transform: scale(0.75);
-    } 90% {
-        opacity: 1;
-        transform: scale(1);
-    } 
-}
-@keyframes smaller{
-    from {
-        opacity: 1;
-        transform: scale(1);
-    } to {
-        opacity: 0.4;
-        transform: scale(0.8);
-    }
-}
 .view-attachment{
-    max-width: 70%;
+    max-width: 750px;
     max-height: 500px;
     position: absolute;
     top: 0; left: 0;
     right: 0; bottom: 0;
     margin: auto;
     transition: 0.1s;
-}
-.bigger{
-    animation: 0.15s ease-out 0s 1 bigger;
-}
-.smaller{
-    animation: 0.15s forwards 0s 1 smaller;
 }
 .unsent-message{
     color: var(--font-secondary);
@@ -149,6 +141,10 @@ div[theme="dark"] .message-div:hover{
     background-color: var(--background-primary);
     z-index: 3;
     height: fit-content;
+}
+.image-preview .create-server{
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
 }
 .add-comment{
     color: var(--font-secondary);
@@ -167,6 +163,7 @@ div[theme="dark"] .message-div:hover{
     margin-bottom: -7px;
     border-radius: 5px;
     -webkit-user-drag: none;
+    backdrop-filter: blur(3px);
 }
 .image-preview input{
     position: relative;
@@ -203,27 +200,31 @@ div[theme="dark"] .message-div:hover{
     color: var(--font-secondary);
 }
 .message-params{
-    opacity: 0;
-    width: 23px;
-    border-radius: 50%;
-    height: 23px;
+    visibility: hidden;
+    width: 28px;
+    border-radius: 3px;
+    height: 28px;
     position: absolute;
-    right: 10px;
-    top: 2px;
+    right: 0;
+    top: 0;
+    transform: translateY(-50%);
     cursor: pointer;
-    z-index: 3;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-primary);
+    box-shadow: 0 0 0 1px var(--background-xx);
 }
 .message-params svg{
     pointer-events: none;
+    position: relative;
 }
-.message-params:active{
-    background-color: var(--background-hover);
-    box-shadow: 0 0 0 1px rgb(92, 91, 100);
+.message-params:active svg{
+    top: 1px;
 }
 .message-params:focus,
 .message-div:hover .message-params{
-    opacity: 1;
+    visibility: visible;
 }
 .message-menu{
     background-color: var(--background-floating);
@@ -235,18 +236,16 @@ div[theme="dark"] .message-div:hover{
     user-select: none;
     padding: 7px 5px;
     box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.055);
-    transition: 0.1s;
     position: fixed;
 }
 .option{
     padding: 7px;
     margin-top: 0;
     margin-bottom: 0;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 14px;
-    color: var(--font-primary);
+    color: var(--font-secondary);
     cursor: pointer;
-    border-bottom: 1px var(--background-secondary) solid;
     border-radius: 2px;
     transition: 0.1s;
 }
@@ -302,7 +301,7 @@ div[theme="dark"] .message-div:hover{
     max-height: 290px;
     overflow: hidden;
     padding-bottom: 10px;
-    padding-top: 8px;
+    padding-top: 9px;
 }
 .dlt .message-params{
     display: none;
@@ -310,10 +309,6 @@ div[theme="dark"] .message-div:hover{
 .dlt .message-div *{
     pointer-events: none;
     user-select: none;
-}
-.dlt .author-icon{
-    left: 20px;
-    top: 9px;
 }
 .confirm-dlt{
     width: 100%;
@@ -344,86 +339,74 @@ div[theme="dark"] .message-div:hover{
     left: 5%;
     margin-bottom: 30px;
 }
-@keyframes brighter {
-    from {
-        background-color: rgba(0, 0, 0, 0.671);
-    } to {
-        background-color: rgba(0, 0, 0, 0);
-    }
-}
-@keyframes darker {
-    from {
-        background-color: rgba(0, 0, 0, 0);
-    } to {
-        background-color: rgba(0, 0, 0, 0.671);
-    }
-}
-.dark-div.bigger{
-    animation: darker 0.2s forwards;
-}
-.dark-div.smaller{
-    animation: brighter 0.2s forwards;
-}
 .message-invite{
     width: 200px;
     height: 90px;
     position: relative;
-    top: 2px;
     margin-top: 3px;
+    display: grid;
+    grid-template-columns: 60px 140px;
+    grid-template-rows: 45px 45px;
     overflow: hidden;
+    margin-bottom: 4px;
+    grid-template-areas: 
+    "area-1 area-1" 
+    "area-2 area-2";
     border-radius: 5px;
     background-color: var(--background-secondary);
 }
+.name-and-members{
+    height: 40px;
+    margin-top: auto;
+}
 .server-invite-icon{
     -webkit-user-drag: none;
-    position: absolute;
     border-radius: 50%;
-    left: 5%;
-    top: 5px;
+    margin-left: 10px;
+    margin-top: 5px;
+    background-color: var(--background-tertiary);
 }
 .server-invite-name{
-    position: absolute;
-    left: 60px; top: 0;
     font-size: 16px;
     font-weight: 500;
-    margin-top: 7px;
+    margin: 0;
+    margin-top: 1px;
+    margin-bottom: 3px;
     user-select: none;
+    max-width: 95%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: keep-all;
+    word-wrap: normal;
     color: var(--font-primary);
 }
 .server-invite-join{
-    position: absolute;
     background-color: var(--blue);
     border: none;
     color: white;
+    grid-area: area-2;
     width: 90%;
     height: 30px;
-    bottom: 7px;
-    left: 5%;
+    margin: auto;
     border-radius: 4px;
     font-size: 16px;
     transition: 0.3s;
 }
 .member-count{
-    position: absolute;
-    top: 13px;
     font-size: 14px;
     color: var(--font-secondary);
     font-weight: 500;
     user-select: none;
-    left: 73px;
+    margin: 0;
 }
-.circle{
+.member-count::before{
+    content: "";
+    display: inline-block;
+    margin-right: 5px;
     background-color: var(--green);
     width: 8px;
     height: 8px;
     border-radius: 10px;
-    position: absolute;
-    left: 61px;
-    top: 31px;
-}
-.min .message-invite{
-    left: 100px;
-    margin-top: 7px;
 }
 .server-invite-join:hover{
     background-color: var(--blue-hover);
@@ -467,9 +450,58 @@ div[theme="dark"] .message-div:hover{
     animation: translateAndRotate infinite linear 0.7s;
     margin: auto;
 }
+.rotating + .message-attachment{
+    background-color: var(--background-primary-hover);
+}
 .send-attachment{
     background: var(--blue);
 }
 .send-attachment:hover{
     background-color: var(--blue-hover);
+}
+.skeleton{
+    width: 100%;
+    margin-bottom: 15px;
+    position: relative;
+}
+.skeleton:first-child{
+    margin-bottom: 35px;
+}
+.skeleton-pfp{
+    width: 40px;
+    height: 40px;
+    background-color: var(--background-hover);
+    border-radius: 50%;
+    position: absolute;
+    top: 4px;
+    left: 17px;
+}
+.sl,
+.skeleton-username{
+    background-color: var(--background-hover);
+    height: 15px;
+    border-radius: 40px;
+    position: relative;
+    left: 70px;
+    top: 6px;
+}
+.sl{
+    display: inline-block;
+    margin-right: 5px;
+    margin-top: 6px;
+}
+.random-sl{
+    margin-top: -4px;
+}
+.random-sl .sl{
+    display: block;
+}
+.skeleton-content-a{
+    width: 300px;
+    height: 200px;
+    position: relative;
+    left: 74px;
+    margin-top: 13px;
+    background-color: var(--background-hover);
+    border-radius: 10px;
 }

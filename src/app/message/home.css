@@ -5,7 +5,6 @@
     position: relative;
     height: 25px;
     margin-left: 8px;
-    left: 10px;
     background-color: transparent;
     border: none;
     border-radius: 3px;
@@ -14,6 +13,11 @@
     font-size: 15px;
     transition: 0.2s;
     font-weight: 500;
+}
+.messages.messages-home{
+    grid-template-areas: 
+    "header header"
+    "messages messages";
 }
 .name-online .online{
     color: var(--font-primary);
@@ -35,16 +39,21 @@
     background-color: var(--green);
     color: white;
 }
+.h3-title{
+    margin: auto 0 auto 15px;
+    font-size: 17px;
+    color: var(--font-primary);
+    user-select: none;
+}
+.h3-title span{
+    margin: 0 5px;
+    font-size: 20px;
+    color: var(--font-secondary);
+}
 .online:hover,
 .all:hover,
 .pending:hover{
     background-color: var(--background-hover);
-}
-.wrapper{
-    width: 100%;
-    position: absolute;
-    height: calc(100% - 50px);
-    top: 50px;
 }
 .fake-after:not(:empty):after{
     content: "#0000";
@@ -73,41 +82,35 @@
     font-weight: 400;
     top: 0; left: 0;
     outline: none;
-    border-radius: 10px;
+    border-radius: inherit;
     overflow: hidden;
 }
 .add-friend-input{
     position: relative;
-    width: calc(100% - 40px);
-    left: 20px;
-    height: 50px;
+    width: 100%;
+    height: 52px;
     min-width: 300px;
+    border-radius: 10px;
 }
 .dumb-text-3{
     color: var(--font-secondary);
-    position: relative;
-    left: 20px;
 }
 .invite{
-    padding-bottom: 40px;
+    padding: 0 20px 40px 20px;
     user-select: none;
     border-bottom: 1px var(--background-secondary) solid;
-}
-.h3-add{
-    position: relative;
-    left: 20px;
     color: var(--font-primary);
 }
 .dm-start{
-    width: calc(100% - 40px);
-    left: 20px;
-    margin-top: 40px;
-    position: relative;
+    justify-self: stretch;
+    margin: 30px 20px 5px 20px;
     border-bottom: 1px var(--font-background) solid;
     user-select: none;
 }
 .dm-avatar{
     border-radius: 50%;
+    width: 85px;
+    height: 85px;
     -webkit-user-drag: none;
 }
 .dm-username{
@@ -146,12 +149,13 @@
     opacity: 1;
 }
 .list{
-    width: calc(100% - 7px);
-    height: calc(100% - 40px);
+    width: 100%;
     overflow-y: scroll;
-    position: absolute;
-    top: 40px;
-    left: 0;
+    height: 100%;
+    scrollbar-color: var(--background-tertiary) var(--background-secondary);
+    scrollbar-width: thin;
+    box-sizing: border-box;
+    border-right: 4px transparent solid;
 }
 .list::-webkit-scrollbar-track-piece:end{
     margin-bottom: 10px;
@@ -161,19 +165,18 @@
 }
 .home-title{
     color: var(--font-secondary);
-    position: absolute;
-    left: 13px;
-    top: 14px;
-    margin: 0;
+    margin-left: 15px;
+    margin-top: 14px;
     user-select: none;
     font-size: 13px;
 }
 .friend{
-    width: calc(100% - 20px);
     position: relative;
-    left: 10px;
-    display: block;
-    height: 65px;
+    margin-left: 10px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    height: 55px;
     border-radius: 5px;
 }
 .friend:hover{
@@ -193,19 +196,15 @@
 }
 .friend-pfp{
     border-radius: 50%;
-    position: absolute;
-    left: 15px;
     -webkit-user-drag: none;
-    top: 10px;
+    margin-left: 15px;
+    margin-right: 13px;
 }
 .friend-name{
     color: var(--font-primary);
-    position: absolute;
-    left: 73px;
-    top: 13px;
     user-select: none;
-    margin: 0;
     font-size: 15px;
+    margin: 0;
 }
 .friend-name span{
     font-weight: 400;
@@ -219,18 +218,19 @@
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    position: absolute;
-    right: 20px;
     cursor: pointer;
     border: none;
+    position: relative;
     background-color: var(--background-secondary);
-    top: 15px;
     text-align: center;
     line-height: 35px;
     color: var(--font-secondary);
     user-select: none;
     font-size: 14px;
     font-weight: 600;
+    justify-self: right;
+    margin-left: auto;
+    margin-right: 15px;
 }
 .accept svg{
     top: 0; left: 0;
@@ -245,14 +245,63 @@
 .accept:hover svg{
     fill: var(--green);
 }
-.friend:hover .accept{
-    background-color: var(--background-tertiary);
-}
 .state{
     color: var(--font-secondary);
-    position: absolute;
-    left: 73px;
     font-size: 15px;
-    top: 21px;
     user-select: none;
+    margin: 0;
+    margin-top: 1px;
+}
+.friends-click{
+    height: 45px;
+    margin-top: 10px;
+    width: 228px;
+    position: relative;
+    left: 6px;
+    border-radius: 3px;
+    box-sizing: border-box;
+    padding-left: 10px;
+    line-height: 45px;
+    color: var(--font-secondary);
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+}
+.friends-click:hover{
+    color: var(--font-primary);
+    background-color: var(--background-secondary-hover);
+}
+.friends-clicked{
+    color: var(--font-primary);
+    background-color: var(--background-secondary-hover);
+}
+.direct-messages{
+    color: var(--font-secondary);
+    user-select: none;
+    margin-bottom: 6px;
+    margin-left: 10px;
+    font-size: 13px;
+}
+.direct-messages:hover{
+    color: var(--font-primary);
+}
+.who-am-i-talking-to{
+    border-radius: 50%;
+    margin-left: 15px;
+    margin-right: 5px;
+    -webkit-user-drag: none;
+}
+.dm-title{
+    display: flex;
+    align-items: center;
+}
+.home-search{
+    justify-content: center;
+    padding: 0;
+    cursor: default;
+}
+.home-search-input{
+    width: 90%;
+    cursor: pointer;
+    height: 27px;
 }

@@ -1,11 +1,12 @@
 import React, { useRef, useEffect } from "react";
 
-function useOutsideAlerter(ref, e) {
+function useOutsideAlerter(ref, e, getEvent) {
     useEffect(() => {
 
         function handleClickOutside(event) {
             if (ref.current && !ref.current.contains(event.target)) {
-                e()
+                if (getEvent) return e(event)
+                e?.()
             }
         }
 
@@ -13,14 +14,14 @@ function useOutsideAlerter(ref, e) {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [ref, e]);
+    }, [ref, e, getEvent]);
 }
 
 const Utils = {
-    Out({ click, children }) {
+    Out({ click, children, getEvent}) {
         const wrapperRef = useRef(null);
-        useOutsideAlerter(wrapperRef, click);
-        return <div ref={wrapperRef}>{children}</div>;
+        useOutsideAlerter(wrapperRef, click, getEvent);
+        return <div className="outer-div" ref={wrapperRef}>{children}</div>;
     },
     isScolled(el, holder) {
         holder = holder || document.body

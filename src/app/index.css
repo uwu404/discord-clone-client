@@ -1,38 +1,47 @@
 :root{
     --purple: rgb(90, 0, 129);
+    --purple-hover: rgb(61, 0, 87);
     --green: rgb(30, 220, 115);
     --yellow: rgb(241, 245, 45);
     --red: rgb(255, 2, 58);
     --green-hover: rgb(27, 172, 92);
     --red-hover: rgb(209, 0, 45);
-    --blue-hover: rgb(33, 47, 153);
+    --blue-hover: rgb(36, 51, 160);
     --background-primary: rgb(211, 211, 223);
     --background-secondary: rgb(181, 181, 194);
     --background-tertiary: rgb(156, 156, 173);
     --background-xx: rgb(169, 169, 189);
-    --blue: rgb(45, 61, 180);
+    --blue: rgb(55, 76, 230);
     --font-background: rgb(237, 237, 245);
-    --background-secondary-hover: rgb(174, 174, 186);
+    --background-secondary-hover: rgba(120, 122, 146, 0.096);
     --font-primary: rgb(1, 0, 22);
     --cyan: rgb(50, 160, 224);
-    --background-hover: rgba(0, 0, 0, 0.096);
+    --background-hover: rgba(120, 122, 146, 0.171);
     --background-floating: white;
-    --font-secondary: rgb(110, 110, 126);
-    --shadow: rgba(27, 27, 31, 0.137);
+    --font-secondary: rgb(125, 125, 143);
+    --shadow: rgba(27, 27, 31, 0.199);
+    --font-background-secondary: rgb(255, 255, 255);
+    --background-primary-hover: rgba(79, 84, 92, 0.062);
+    --icon-normal: rgb(101, 101, 116);
+    --seperator: rgb(192, 200, 219);
 }
 
-div[theme="dark"]{
-    --background-primary: rgb(38, 38, 49);
+div.dark{
+    --background-primary: rgb(38, 39, 49);
     --font-primary: rgb(222, 222, 231);
-    --background-secondary: rgb(28, 28, 37);
+    --background-secondary: rgb(31, 31, 41);
     --font-background: rgb(50, 50, 61);
-    --shadow: rgba(13, 13, 15, 0.432);
+    --shadow: rgba(13, 13, 15, 0.5);
     --background-tertiary: rgb(18, 18, 24);
     --background-floating: rgb(17, 17, 22);
-    --background-secondary-hover: rgb(35, 35, 44);
-    --font-secondary: rgb(137, 137, 153);
-    --background-hover: rgba(255, 255, 255, 0.068);
-    --background-xx: rgb(25, 25, 34);
+    --background-secondary-hover: rgb(36, 36, 48);
+    --font-secondary: rgb(153, 154, 172);
+    --background-hover: rgba(189, 192, 235, 0.068);
+    --background-xx:  rgb(25, 26, 34);
+    --font-background-secondary: rgb(99, 101, 117);
+    --background-primary-hover: rgba(4, 4, 5, 0.07);
+    --icon-normal: rgb(183, 184, 204);
+    --seperator: rgb(76, 76, 88);
 }
 
 .main{
@@ -43,9 +52,8 @@ div[theme="dark"]{
     height: 100%;
     width: 100%;
 }
-
 *{
-    font-family: 'Roboto';
+    font-family: 'Roboto', sans-serif;
 }
 .github-link{
     color: var(--font-secondary);
@@ -66,4 +74,18 @@ input::placeholder{
 
 img{
     user-select: none;
+}
+
+a{
+    color: var(--cyan);
+}
+
+ul {
+    padding: 0;
+    list-style-type: none;
+    margin: 0;
+}
+
+li::marker{
+    display: none;
 }

@@ -1,0 +1,20 @@
+.edit-image {
+    background-color: var(--background-primary);
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: 600px;
+    height: fit-content;
+    z-index: 7;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    overflow: hidden;
+}
+.edit-image h2 {
+    align-self: flex-start;
+    margin-left: 16px;
+    color: var(--font-primary);
+    font-size: 20px;
+}

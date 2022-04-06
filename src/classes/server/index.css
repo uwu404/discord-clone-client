@@ -9,44 +9,55 @@
 .server-icon:active{
     top: 1px;
 }
-.add-server-border,
 .server{
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     position: relative;
-    left: calc(50% - (50px/2));
     border-radius: 50%;
-    margin-bottom: 7px;
 }
-.add-server-border::before,
-.server::before{
+.server-block{
+    display: flex;
+    width: 100%;
+    height: 48px;
+    margin-top: 7px;
+}
+.server-block:last-child{
+    margin-bottom: 10px;
+}
+.server-marker{
     content: "";
     width: 4px;
     border-bottom-right-radius: 4px;
     border-top-right-radius: 4px;
     height: 10px;
-    position: absolute;
-    top: 50%;
     transform-origin: 0 0;
-    left: -10px;
-    transform: translateY(-50%) scaleX(0);
+    transform: scaleX(0);
     background-color: var(--font-primary);
     transition: 0.2s;
+    margin: auto 8px auto 0;
+    order: -1;
 }
-.add-server-border:hover::before,
-.server:hover::before{
+.server:hover + .server-marker{
     height: 18px;
-    transform: translateY(-50%) scaleX(1);
+    transform: scaleX(1);
 }
-.add-server-border.add-clicked::before,
-.server.click::before{
+.server-block.clicked .server-marker{
     height: 38px;
-    transform: translateY(-50%) scaleX(1);
+    transform: scaleX(1);
 }
-.server.click img,
+.server-block.clicked .server-icon,
 .server-icon:hover{
     border-radius: 16px;
     background-color: var(--blue);
+}
+.default-no-img-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--font-primary);
+    font-weight: 500;
+    user-select: none;
+    font-size: 22px;
 }
 .add-server{
     background: var(--background-primary);
@@ -57,8 +68,8 @@
     user-select: none;
     font-weight: 500;
     color: var(--green);
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
 }
 .add-server svg{
     top: 50%;
@@ -67,7 +78,7 @@
     position: absolute;
     transform: translate(-50%, -50%);
 }
-.add-server-border.add-clicked .add-server,
+.server-block.clicked .add-server,
 .add-server:hover{
     border-radius: 16px;
     background-color: var(--green);
@@ -81,13 +92,21 @@
     top: 0; bottom: 0;
     left: 0; right: 0;
     margin: auto;
-    width: 410px;
+    width: 420px;
+    height: fit-content;
     overflow: hidden;
+    align-items: center;
     border-radius: 5px;
-    height: 390px;
+    display: flex;
+    flex-direction: column;
     background-color: aliceblue;
     z-index: 3;
+    user-select: none;
 }
+.view-server{
+    text-align: center;
+}
+.part-1 svg,
 .creator svg{
     position: absolute;
     right: 10px;
@@ -103,32 +122,35 @@
     color: black;
 }
 .dummy-text{
-    color: black;
+    color: rgb(133, 133, 133);
     margin-top: -4px;
-    margin-left: 40px;
-    margin-right: 40px;
-    font-size: 14px;
+    margin-left: 30px;
+    margin-right: 30px;
+    font-weight: 400;
+    font-size: 15px;
 }
 .selector{
     width: 80px; height: 80px;
-    border: 4px var(--background-tertiary) dashed;
+    border: 3px var(--background-tertiary) dashed;
     border-radius: 50%;
     background: aliceblue;
     overflow: hidden;
-    position: absolute;
-    top: 120px; left: calc(50% - 42px);
+    margin: auto;
+    margin-top: 20px;
+    position: relative;
+    margin-bottom: 30px;
 }
 .selector::before{
-    content: "Upload";
+    content: "UPLOAD";
     color: var(--background-tertiary);
     inset: 0;
     margin: auto;
     width: fit-content;
     height: fit-content;
     position: absolute;
-    font-size: 18px;
+    font-size: 16px;
     z-index: 0;
-    font-weight: 900;
+    font-weight: 600;
 }
 .select-icon{
     position: absolute;
@@ -158,8 +180,6 @@
     display: none;
 }
 .select-server-name{
-    position: absolute;
-    bottom: 85px;
     background-color: rgb(232, 239, 247);
     outline: none;
     color: black;
@@ -167,9 +187,10 @@
     border: 1px rgb(187, 187, 187) solid;
     border-radius: 5px;
     width: calc(94% - 30px);
-    left: 3%;
     transition: 0.2s;
     padding: 4px 15px;
+    margin-top: 3px;
+    margin-bottom: 10px;
     height: 35px;
 }
 .select-server-name:focus{
@@ -182,93 +203,44 @@ label[for="server"]{
     color: var(--background-tertiary);
     font-weight: 600;
     font-size: 14px;
-    position: absolute;
-    left: 3%;
-    bottom: 133px;
+    margin-right: auto;
+    margin-left: 12px;
+    justify-self: left;
 }
-.dark-div{
-    background-color: rgba(0, 0, 0, 0.671);
+.server-menu{
+    background-color: var(--background-floating);
     position: fixed;
-    top: 0; left: 0;
-    bottom: 0; right: 0;
     z-index: 3;
+    width: 220px;
+    transform-origin: 50% 0;
+    border-radius: 5px;
+    color: var(--font-primary);
+    left: 82px;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    box-sizing: border-box;
+    top: 55px;
+    padding: 8px 8px;
 }
-.view-server{
-    position: absolute;
-    height: 40%;
+.clear-div.taller .animated-popup{
+    animation: taller 0.2s forwards;
+}
+.clear-div.shorter .animated-popup{
+    animation: shorter 0.21s forwards;
+}
+.server-menu p{
+    border-radius: 3px;
+    margin: 0;
+    padding: 5px 10px;
+    cursor: pointer;
     user-select: none;
-    color: var(--font-primary);
-    text-align: center;
-    top: 0;
+    box-sizing: border-box;
     width: 100%;
-}
-.create-server{
-    position: absolute;
-    bottom: 0; left: 0;
-    width: 100%; height: 70px;
-    background: var(--background-secondary);
-}
-.creator .create-server{
-    background-color: rgb(231, 239, 247);
-}
-.create-server-button{
-    position: absolute;
-    width: 95px;
-    border: none;
-    border-radius: 3px;
-    font-size: 14px;
-    color: white;
+    font-size: 15px;
     font-weight: 500;
-    transition: 0.2s;
-    right: 5%;
-    top: 50%; transform: translateY(-50%);
-    background: var(--green);
-    height: 38px;
 }
-.create-server-button:hover{
-    background-color: var(--green-hover);
-}
-.creator .create-server-button{
-    right: 3%;
-}
-.cancel-creating{
-    right: 135px; 
-    width: fit-content;
-    height: fit-content;
-    background: transparent;
-    color: black;
-}
-.creator .cancel-creating{
-    right: auto;
-    left: 3%;
-}
-.cancel-creating:hover{
-    background-color: transparent;
-    text-decoration: underline;
-}
-.search-input{
-    width: 100%;
-    overflow: hidden;
-    height: 50px;
-    position: absolute;
-    top: 0;
-    background-color: var(--background-primary);
-    color: var(--font-primary);
-    border-bottom: 1px var(--background-tertiary) solid;
-}
-.search-input input{
-    background-color: var(--background-secondary);
-    width: 80%;
-    position: absolute;
-    left: 0;
-    border: none;
-    border-radius: 3px;
-    outline: none;
-    color: var(--font-primary);
-    top: 50%;
-    height: 25px;
-    padding: 2px 5px;
-    transition: 0.2s;
-    transform: translateY(-50%);
-    font-size: 14px;
+.server-menu p:hover{
+    background-color: var(--blue);
 }

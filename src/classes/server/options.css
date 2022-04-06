@@ -1,0 +1,229 @@
+.invite-people-div{
+    height: fit-content;
+    width: 480px;
+    background-color: var(--background-primary);
+    border-radius: 5px;
+    z-index: 2;
+    user-select: none;
+    overflow: hidden;
+    inset: 0;
+    position: fixed;
+    color: var(--font-primary);
+    pointer-events: all;
+    margin: auto;
+}
+.part-1.part-1 svg{
+    stroke: var(--background-primary);
+}
+.part-1 h3{
+    font-size: 16px;
+}
+.part-3 input,
+.part-1 input{
+    background-color: var(--background-tertiary);
+    width: 100%;
+    outline: none;
+    margin-bottom: 15px;
+    font-size: 14px;
+    padding: 3px 3px;
+    box-sizing: border-box;
+    color: var(--font-primary);
+    border: none;
+    border-radius: 3px;
+}
+.part-1, .part-2, .part-3{
+    padding: 0 15px;
+}
+.part-2{
+    border-top: 1px var(--background-tertiary) solid;
+    border-bottom: 1px var(--background-secondary) solid;
+    text-align: center;
+    max-height: 200px;
+    overflow: auto;
+    padding: 5px 15px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--background-tertiary);
+}
+.part-2::-webkit-scrollbar{
+    width: 5px;
+}
+.part-2::-webkit-scrollbar-thumb{
+    background-color: var(--background-tertiary);
+}
+.copied.copied{
+    background-color: var(--green);
+}
+.part-2 p{
+    color: var(--font-secondary);
+    font-weight: 700;
+    font-size: 15px;
+}
+.part-3 h4{
+    font-size: 14px;
+    color: var(--font-secondary);
+    margin-bottom: 7px;
+}
+.part-3 input{
+    font-size: 16px;
+    border: 1px var(--shadow) solid;
+    padding: 10px 10px;
+    transition: 0.2s;
+    margin: 0;
+    background-color: var(--background-secondary);
+}
+.part-3 input:hover{
+    border-color: black;
+}
+.part-3.part-3 input:focus{
+    border-color: var(--cyan);
+}
+.part-3 div{
+    position: relative;
+    margin-bottom: 16px;
+}
+.part-3 button{
+    position: absolute;
+    right: 5px;
+    transition: 0.2s;
+    background-color: var(--blue);
+    color: white;
+    outline: none;
+    padding: 6px 10px;
+    font-size: 15px;
+    width: fit-content;
+    top: 0;
+    bottom: 0;
+    height: fit-content;
+    margin-top: auto;
+    margin-bottom: auto;
+    border-radius: 3px;
+    border: none;
+}
+.part-3 button:hover + input{
+    border-color: black;
+}
+.invite-friend img{
+    border-radius: 50%;
+    -webkit-user-drag: none;
+    margin-left: 10px;
+}
+.invite-friend{
+    width: 100%;
+    text-align: left;
+    display: inline-flex;
+    align-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 3px;
+}
+.invite-friend:hover{
+    background-color: var(--background-hover);
+}
+.invite-friend h5{
+    margin: 0;
+    margin-left: 10px;
+    font-size: 14px;
+}
+.invite-friend button{
+    justify-self: right;
+    margin-left: auto;
+    margin-right: 5px;
+    border: 1px var(--green) solid;
+    outline: none;
+    background-color: transparent;
+    color: var(--green);
+    border-radius: 3px;
+    padding: 7px;
+    transition: 0.1s;
+    width: 70px;
+}
+.invite-friend:hover button{
+    background-color: var(--green);
+    color: white;
+}
+.invite-friend button:hover{
+    background-color: var(--green-hover);
+    color: white;
+    border-color: var(--green-hover);
+}
+.invited.invited.invited{
+    background-color: transparent;
+    cursor: not-allowed;
+    border: none;
+    color: var(--font-secondary);
+}
+.edit-server{
+    inset: 0;
+    width: 400px;
+    height: fit-content;
+    background-color: var(--background-primary);
+    margin: auto;
+    border-radius: 7px;
+    position: fixed;
+    display: flex;
+}
+.server-edit-icon{
+    width: fit-content;
+}
+.server-edit-icon img{
+    border-radius: 50%;
+    margin: 20px 0 10px 20px;
+    object-fit: cover;
+    -webkit-user-drag: none;
+}
+.change-server-name{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+    border: 1px var(--shadow) solid;
+    outline: none;
+    font-size: 15px;
+    background-color: var(--background-secondary);
+    border-radius: 3px;
+    color: var(--font-primary);
+    transition: 0.2s;
+    position: relative;
+    margin-top: 5px;
+}
+.server-info input:hover{
+    border-color: black;
+}
+.server-info button{
+    inset: auto;
+    position: relative;
+    width: 70px;
+    box-sizing: border-box;
+    font-size: 15px;
+    padding: 4px;
+    background-color: transparent;
+    border: 1px var(--font-primary) solid;
+    border-radius: 3px;
+    color: var(--font-primary);
+    margin-right: 10px;
+    font-weight: 500;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.server-info{
+    position: relative;
+}
+.server-info label{
+    color: var(--font-secondary);
+    font-size: 14px;
+    font-weight: 500;
+}
+.server-info h3{
+    color: var(--font-primary);
+    margin-top: 20px;
+}
+.upload-file{
+    position: absolute;
+    visibility: hidden;
+}
+.upload-button{
+    text-decoration: underline;
+    color: var(--cyan);
+    cursor: pointer;
+    font-size: 15px;
+    margin-left: 20px;
+}

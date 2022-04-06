@@ -1,37 +1,20 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react"
-import User, { usersCache } from "../../classes/user"
+import { useEffect, useLayoutEffect, useState, useCallback, useContext } from "react"
+import User from "../../classes/user"
 import Plus from "../../icons/plus"
 import "./home.css"
 import { link } from "../../config.json"
-import { socket } from "."
-import Channel from "../../classes/channel"
-import Message from "../../classes/message"
-import Utils from "../../utils"
-
-export const friendsCache = {
-    add(key, users) {
-        this[key] = []
-        for (const user of users) {
-            this[key].push(user._id)
-            usersCache[user._id] = user
-        }
-    },
-    push(key, user) {
-        if (!this[key]) return
-        if (this[key].includes(user._id)) return
-        this[key].push(user._id)
-        usersCache[user._id] = user
-    },
-    get(key) {
-        if (!this[key]) return null
-        const array = []
-        for (const id of this[key]) {
-            const user = usersCache[id]
-            array.push(user)
-        }
-        return array
-    }
-}
+import { ScreenContext, socket } from "."
+import SkeletonLoadingMessage from "../../icons/bones"
+import Input from "../../global/input"
+import Footer from "../../classes/user/footer"
+import Messages from "../../classes/message/messagesMapper"
+import SearchUsers from "./findConversation/index"
+import createMessage from "./sendMessage"
+import handleSocketEvents from "./handleSocketEvents"
+import PreviousQueries from "../../cache"
+import Avatar from "../../global/avatar"
+import Attachments from "./attachmentManager"
+import toBase64 from "../../global/toBase64"
 
 const Map = ({ users, onClick, type }) => {
     return users.map(u => {
@@ -39,12 +22,14 @@ const Map = ({ users, onClick, type }) => {
         const user = new User(u)
         return (
             <div key={user.id} className="friend">
-                <img width="45" height="45" alt="uwu" src={user.displayAvatarURL(45)} className="friend-pfp" />
-                <h5 className="friend-name">{user.username}<span>{user.tag}</span></h5>
-                <p className="state">{type === "requests" && u.recieved && "Incoming friend request"}</p>
-                <p className="state">{type === "requests" && !u.recieved && "Ongoing friend request"}</p>
-                <p className="state">{type === "friends" && (!u.online ? "Offline" : "Online")}</p>
-                {type === "requests" && u.recieved && <div onClick={() => onClick?.(user)} className="accept"><Plus size={15} /></div>}
+                <img width="35" height="35" alt="uwu" src={user.displayAvatarURL(45)} className="friend-pfp" />
+                <div>
+                    <h5 className="friend-name">{user.username}<span>{user.tag}</span></h5>
+                    <p className="state">{type === "requests" && u.received && "Incoming friend request"}</p>
+                    <p className="state">{type === "requests" && !u.received && "Ongoing friend request"}</p>
+                    <p className="state">{type === "friends" && (!u.online ? "Offline" : "Online")}</p>
+                </div>
+                {type === "requests" && u.received && <div onClick={() => onClick?.(user)} className="accept"><Plus size={15} /></div>}
                 {type === "friends" && <div onClick={() => onClick?.(user)} className="accept">DM</div>}
             </div>
         )
@@ -56,29 +41,27 @@ const Friends = ({ online, user, click }) => {
 
     useEffect(() => {
         let isMounted = true
-        if (friendsCache.get("all")) {
-            setFriends(online ? friendsCache.get("all").filter(f => f?.online) : friendsCache.get("all"))
-        } else {
-            fetch(`${link}friends`, {
-                headers: {
-                    Authorization: user.token
-                }
-            }).then(res => res.json())
-                .then(friends => {
-                    friendsCache.add("all", friends)
-                    if (isMounted) setFriends(online ? friends.filter(f => f.online) : friends)
-                })
+        fetch(`${link}friends`, {
+            headers: {
+                Authorization: user.token
+            }
+        }).then(res => res.json())
+            .then(friends => {
+                if (isMounted) setFriends(online ? friends.filter(f => f.online) : friends)
+            })
+        return () => {
+            isMounted = false
+            setFriends([])
         }
-        return () => { isMounted = false }
     }, [user, online])
 
     return (
-        <div>
+        <>
             <h5 className="home-title">{online ? "ONLINE" : "ALL"}—{friends.length}</h5>
             <div className="list">
                 <Map onClick={click} type="friends" users={friends} />
             </div>
-        </div>
+        </>
     )
 }
 
@@ -90,6 +73,7 @@ const Add = ({ user }) => {
 
     const sendRequest = async () => {
         const [username, tag] = value.split("#")
+        if (!username || !tag) return
         const res = await fetch(`${link}users/${username}&${tag}/request`, {
             method: "POST",
             headers: {
@@ -123,25 +107,19 @@ const Pending = ({ user }) => {
 
     useEffect(() => {
         let isMounted = true
-        if (friendsCache.pending) {
-            setRequests(friendsCache.pending)
-        } else {
-            fetch(`${link}friends/pending`, {
-                headers: {
-                    Authorization: user.token
-                }
-            }).then(res => res.json())
-                .then(requests => {
-                    friendsCache.pending = requests
-                    if (isMounted) setRequests(requests)
-                })
-        }
+        fetch(`${link}friends/pending`, {
+            headers: {
+                Authorization: user.token
+            }
+        }).then(res => res.json())
+            .then(requests => {
+                if (isMounted) setRequests(requests)
+            })
         return () => { isMounted = false }
     }, [user])
 
     const click = (invite) => {
         setRequests(prev => [...prev].filter(u => u._id !== invite.id))
-        friendsCache.push("all", invite)
         fetch(`${link}accept/${invite.id}`, {
             method: "POST",
             headers: { Authorization: user.token }
@@ -149,158 +127,181 @@ const Pending = ({ user }) => {
     }
 
     return (
-        <div>
+        <>
             <h5 className="home-title">PENDING—{requests.length}</h5>
             <div className="list">
                 <Map type="requests" onClick={click} users={requests} />
             </div>
-        </div>
+        </>
     )
 }
 
-const DM = ({ user, me, setView, onJoin }) => {
+const DM = ({ dm, me, onJoin, setLogs }) => {
+    const [messages, setMessages] = useState()
+    const [attachments, setAttachments] = useState([])
+    const [isLoading, setIsLoading] = useState()
 
-    const [messages, setMessages] = useState([])
-    const chat = useRef(), scroller = useRef()
-
-    const scroll = () => {
-        const container = chat.current
-        if (Utils.isScolled(scroller.current, container)) {
-            setTimeout(() => scroller.current?.scrollIntoView(false), 1)
+    const sendMessage = useCallback((k) => {
+        const awaitForMessage = () => {
+            const logs = prev => {
+                const newOrder = [...prev]
+                newOrder.splice(0, 0, newOrder.splice(newOrder.findIndex(u => u._id === dm.user._id), 1)[0]);
+                return newOrder
+            }
+            setLogs(logs);
+            PreviousQueries.setLogs(logs)
         }
+        createMessage(k, me, new User(dm.user), setMessages, attachments, setAttachments, awaitForMessage)
+    }, [dm.user, me, attachments, setLogs])
+
+    useLayoutEffect(() => {
+        let isMounted = true
+        if (PreviousQueries.channels[dm.user.id]) {
+            setMessages(PreviousQueries.channels[dm.user.id])
+        } else {
+            setMessages()
+            fetch(`${link}dm/${dm.user.id}`, {
+                headers: { Authorization: me.token }
+            }).then(res => res.json())
+                .then(messages => {
+                    if (!isMounted) return
+                    setMessages(messages)
+                    PreviousQueries.at("channels", dm.user.id)(messages)
+                    setIsLoading()
+                })
+        }
+        const dmEvent = message => {
+            if (!isMounted) return
+            if (message.channel !== dm.user.id) return
+            handleSocketEvents.message(setMessages, message)
+        }
+        const messageDelete = message => {
+            if (!isMounted) return
+            if (message.user !== dm.user.id && message.user !== me._id) return
+            handleSocketEvents.messageDelete(setMessages, message)
+        }
+        const messageEdit = message => handleSocketEvents.messageEdit(setMessages, message)
+        socket.on("dm", dmEvent)
+        socket.on("messageDelete", messageDelete)
+        socket.on("messageEdit", messageEdit)
+        return () => {
+            isMounted = false
+            socket.off("dm", dmEvent).off("messageDelete", messageDelete).off("messageEdit", messageEdit)
+        }
+    }, [me.token, me._id, dm])
+
+    useLayoutEffect(() => {
+        if (!messages && !PreviousQueries.channels[dm.user.id]) setIsLoading(<SkeletonLoadingMessage />)
+        else setIsLoading(false)
+    }, [messages, dm.user.id])
+
+    useEffect(() => {
+        if (messages && dm.message?.target.textContent) sendMessage(dm.message)
+    }, [messages, dm.message, sendMessage])
+
+    const sendImage = (file) => {
+        if (!file.data) return
+        setAttachments([file])
     }
 
-    const sendMessage = (k) => {
-        if (k.code !== "Enter") return
-        const content = k.target.textContent
-        if (content.length === 0) return
-        k.preventDefault()
-        const message = { author: me, content: k.target.textContent, _id: `m${Date.now() + Math.random()}`, timestamp: Date.now(), unsent: true, failed: false, channel: user.id }
-        scroll()
-        setMessages(prev => [...prev, message])
-        k.target.textContent = ""
-        fetch(`${link}dm/${user.id}`, {
-            method: "POST",
-            headers: {
-                Authorization: me.token,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                content: content
-            })
-        }).then(res => res.json())
-            .then(msg => {
-                setMessages(prev => {
-                    const list = [...prev]
-                    const m = list.find(m => m._id === message._id)
-                    m._id = msg._id
-                    m.unsent = false
-                    return list
-                })
-            })
-            .catch((err) => {
-                console.error(err)
-                setMessages(prev => {
-                    const list = [...prev]
-                    const m = list.find(m => m._id === message._id)
-                    m.failed = true
-                    return list
-                })
-            })
+    const getImageFromInput = async (e) => {
+        const base64str = await toBase64(e.target.files[0]).catch(() => 0)
+        sendImage({ data: base64str, fileName: e.target.files[0]?.name })
+        e.target.value = ""
     }
+
+    return (
+        <>
+            <div className="chat">
+                {isLoading}
+                <ul className="fetched-messages">
+                    <div className="dm-start">
+                        <img height="85" width="85" className="dm-avatar" alt="icon" src={dm.user.displayAvatarURL(90)} />
+                        <h3 className="dm-username">{dm.user.username}</h3>
+                        <p className="dumb-text-2">This is the beginning of your direct message history with <span>{dm.user.username}</span></p>
+                    </div>
+                    {messages && <Messages onJoin={onJoin} setMessages={setMessages} messages={messages} me={me} />}
+                </ul>
+            </div>
+            <form className="send-message">
+                <div className="controll">
+                    <div className="message-manager">
+                        <ul className={`attachment-list ${attachments.length && "has-children"}`}>
+                            <Attachments setAttachments={setAttachments} attachments={attachments} />
+                        </ul>
+                        <div className="text-content">
+                            <div className="file">
+                                <button className="attach-file">
+                                    <input type="file" onChange={getImageFromInput} />
+                                    <Plus size={10} />
+                                </button>
+                            </div>
+                            <Input placeholder={`Send a message to ${dm.user.username}`} onKeyDown={sendMessage} />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </>
+    )
+}
+
+const Home = ({ user, dm, onJoin }) => {
+    const { setView } = useContext(ScreenContext)
+    const [button, setButton] = useState("online")
+    const [Dm, setDm] = useState(dm)
+    const [logs, setLogs] = useState(PreviousQueries.logs)
+    const clickEvent = (u) => setDm({ user: u })
+    const [screen, setScreen] = useState(<Friends click={clickEvent} online={true} user={user} />)
+
+    useEffect(() => {
+        if (dm) setDm(dm)
+    }, [dm])
+
+    const { not: [notifications, setNotifications] } = useContext(ScreenContext)
+
+    useLayoutEffect(() => {
+        if (!Dm?.user.id) return
+        if (notifications.find(n => n.user._id === Dm.user.id)) setNotifications(prev => [...prev].filter(n => n.user._id !== Dm.user.id))
+        fetch(`${link}notifications?id=${Dm.user.id}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: user.token
+            }
+        })
+            .catch(console.log)
+    }, [notifications, setNotifications, Dm?.user.id, user.token])
 
     useEffect(() => {
         let isMounted = true
-        fetch(`${link}dm/${user.id}`, {
-            headers: { Authorization: me.token }
-        }).then(res => res.json())
-            .then(messages => {
-                if (isMounted) setMessages(messages)
-                scroller.current?.scrollIntoView(false)
-            })
-        socket.on("dm", message => {
-            if (!isMounted) return
-            if (message.channel !== user.id) return
-            scroll()
-            setMessages(prev => [...prev, message])
-        })
-        socket.on("messageDelete", message => {
-            if (!isMounted) return
-            if (message.channel !== user.id || message.channel !== me._id) return
-            setMessages(prev => [...prev].filter(m => m._id !== message._id))
-        })
-        return () => {
-            isMounted = false
-            socket.off("dm")
-        }
-    }, [me, user])
-
-    return (
-        <div>
-            <div ref={chat} className="chat">
-                <div className="dm-start">
-                    <img height="85" width="85" className="dm-avatar" alt="icon" src={user.displayAvatarURL(90)} />
-                    <h3 className="dm-username">{user.username}</h3>
-                    <p className="dumb-text-2">This is the beginning of your direct message history with <span>{user.username}</span></p>
-                </div>
-                <Message.Map onJoin={onJoin} setView={setView} setMessages={setMessages} messages={messages} me={me} />
-                <div ref={scroller} className="scroller" />
-            </div>
-            <div className="controll">
-                <div onKeyDown={sendMessage} placeholder={`Send a message to ${user.username}`}
-                    contentEditable={navigator.userAgent.indexOf("Firefox") !== -1 ? "true" : "plaintext-only"} className="not-input"></div>
-                <div className="attach-file">
-                    <input type="file" />
-                    <Plus size={12} />
-                </div>
-            </div>
-        </div>
-    )
-}
-
-const Home = ({ user, update, dm, onJoin }) => {
-    const [view, setView] = useState()
-    const me = new User(Object.assign(user, { view: setView, update }))
-    const [button, setButton] = useState("online")
-    const [Dm, setDm] = useState(dm)
-    const [logs, setLogs] = useState([])
-    const clickEvent = (u) => setDm(u)
-    const [screen, setScreen] = useState(<Friends online={true} user={user} />)
-
-    useLayoutEffect(() => {
-        fetch(`${link}dms/logs`, {
+        if (PreviousQueries.logs.length) setLogs(PreviousQueries.logs)
+        else fetch(`${link}dms/logs`, {
             headers: {
                 Authorization: user.token
             }
         }).then(res => res.json())
             .then(logs => {
+                if (!isMounted) return
                 setLogs(logs)
+                PreviousQueries.setLogs(logs)
             })
+        const onlineEvent = user => handleSocketEvents.memberOnline(setLogs, user)
+        socket.on("online", onlineEvent)
+        return () => {
+            socket.off("online", onlineEvent)
+            isMounted = false
+        }
     }, [user])
 
     useEffect(() => {
-        let isMounted = true
         if (Dm) {
-            setScreen(<DM onJoin={onJoin} user={Dm} me={user} setView={setView} />)
-            setButton(Dm.id)
+            setScreen(<DM setLogs={setLogs} onJoin={onJoin} dm={Dm} me={user} />)
+            setButton(Dm.user.id)
+            if (!logs.some(u => u._id === Dm.user.id) && !PreviousQueries.logs.some(u => u._id === Dm.user.id)) {
+                setLogs(prev => [Dm.user, ...prev])
+                PreviousQueries.setLogs(prev => [Dm.user, ...prev])
+            }
         }
-        socket.on("message", msg => {
-            if (!isMounted) return
-            new Channel({ _id: msg.channel }).push(msg)
-        })
-        socket.on("online", id => {
-            if (!isMounted) return
-            if (usersCache[id]) usersCache[id].online = true
-        })
-        socket.on("offline", id => {
-            if (!isMounted) return
-            if (usersCache[id]) usersCache[id].online = false
-        })
-        return () => {
-            socket.off('message').off("offline").off("online")
-            isMounted = false
-        }
-    }, [Dm, user, onJoin])
+    }, [Dm, user, onJoin, logs])
 
     const click = (button) => () => {
         setButton(button)
@@ -310,38 +311,60 @@ const Home = ({ user, update, dm, onJoin }) => {
         if (button === "all") setScreen(<Friends click={clickEvent} user={user} />)
     }
 
+    const getFriends = () => {
+        setButton("online")
+        setDm()
+        setScreen(<Friends click={clickEvent} online={true} user={user} />)
+    }
+
+    const makeConversation = () => setView(<SearchUsers clickUser={(user) => setDm({ user })} logs={logs} />)
+
     return (
-        <div>
-            <div className="messages">
-                <div className={`name name-${button}`}>
-                    <button onClick={click("online")} className="online">Online</button>
-                    <button onClick={click("all")} className="all">All</button>
-                    <button onClick={click("pending")} className="pending">Pending</button>
-                    <button onClick={click("add")} className="add-friend">Add friend</button>
-                </div>
-                <div className="server-name"></div>
+        <main className="flexible-container">
+            <section className="left-part">
+                <header className="server-name home-search">
+                    <input onClick={makeConversation} value="Find or start conversation" className="home-search-input generic-input-type-button" type="button" />
+                </header>
                 <div className="channels">
+                    <div onClick={getFriends} className={`friends-click ${!Dm && "friends-clicked"}`}>Friends</div>
+                    <h4 className="direct-messages">DIRECT MESSAGES</h4>
                     {logs.map(u => {
-                        const user = new User(u)
-                        const click = () => setDm(user)
+                        const user = PreviousQueries.userCache.has(u._id) ? new User(PreviousQueries.userCache.get(u._id)) : new User(u)
+                        const click = () => setDm({ user })
                         return (
-                            <div onClick={click} key={user.id} className={`member ${Dm?.id === user.id && "member-clicked"} ${!user.online && "member-offline"}`}>
-                                <img width="38" height="38" src={user.displayAvatarURL(90)} alt="avatar" className={`member-icon`} />
+                            <div onClick={click} key={user.id} style={{ opacity: 1 }} className={`member ${Dm?.user.id === user.id && "member-clicked"} ${!user.online && "member-offline"}`}>
+                                <div className="member-avatar">
+                                    <Avatar size={32} status={user.online ? "online" : false} src={user.displayAvatarURL(90)} />
+                                </div>
                                 <div className="nice-div">
                                     <h4 className={`member-name`}>{user.username}</h4>
-                                    <p className="is-online">{user.online ? "Online" : "Offline"}</p>
+                                    <p className="is-online">{user.online && user.customStatus}</p>
                                 </div>
                             </div>
                         )
                     })}
                 </div>
-                <div className="wrapper">
-                    {screen}
-                </div>
-            </div>
-            <div>{me.toIcon()}</div>
-            {view}
-        </div>
+                <Footer setView={setView} />
+            </section>
+            <section className="messages messages-home">
+                <div className={`name name-${button}`}>
+                    {!Dm ? <>
+                        <h3 className="h3-title">Friends <span>|</span></h3>
+                        <div className="home-buttons">
+                            <button onClick={click("online")} className="online">Online</button>
+                            <button onClick={click("all")} className="all">All</button>
+                            <button onClick={click("pending")} className="pending">Pending</button>
+                            <button onClick={click("add")} className="add-friend">Add friend</button>
+                        </div>
+                    </> :
+                        <div className="dm-title">
+                            <img className="who-am-i-talking-to" height="20" width="20" alt="pfp" src={Dm.user.displayAvatarURL(80)} />
+                            <div className="channel-title"><span>{Dm.user.username}</span></div>
+                        </div>
+                    }</div>
+                <div className="messages-main">{screen}</div>
+            </section>
+        </main>
     )
 }
 

@@ -1,206 +1,243 @@
-import { useEffect, useState, useRef } from "react"
+import { useState, useLayoutEffect, useContext } from "react"
 import Channel from "../../classes/channel"
-import User, { usersCache } from "../../classes/user"
-import Message from "../../classes/message"
-import Utils from "../../utils"
-import ImagePreview from "../../classes/message/imagePreview"
+import User from "../../classes/user"
 import Plus from "../../icons/plus"
-import { socket } from "."
+import { ScreenContext, socket } from "."
+import { link } from "../../config.json"
+import SkeletonLoadingMessage from "../../icons/bones"
+import MemberLoading from "../../icons/members"
+import Down from "../../icons/down"
+import Utils from "../../utils"
+import InvitePeople from "../../classes/server/invite-people"
+import EditServer from "../../classes/server/server-editor"
+import CreateChannel from "../../classes/channel/create-channel"
+import Input from "../../global/input"
+import Footer from "../../classes/user/footer"
+import Messages from "../../classes/message/messagesMapper"
+import Hashtag from "../../icons/hashtag"
+import Animate from "../animate"
+import Attachments from "./attachmentManager/"
+import createMessage from "./sendMessage"
+import handleSocketEvents from "./handleSocketEvents"
+import PreviousQueries from "../../cache"
+import toBase64 from "../../global/toBase64"
 
-const toBase64 = file => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-        const img = new Image()
-        img.onload = () => resolve(reader.result);
-        img.src = reader.result
-    }
-    reader.onerror = error => reject(error);
-});
-
-const Main = ({ user, server, update, onJoin }) => {
-    const [view, setView] = useState()
-    const me = new User(Object.assign(user, { view: setView, update }))
-    const scroller = useRef()
-    const chat = useRef()
+const Main = ({ user, server, onJoin }) => {
+    const { setView } = useContext(ScreenContext)
+    const me = new User(user)
     const [channel, setChannel] = useState()
     const [messages, setMessages] = useState()
     const [members, setMembers] = useState([])
-    const click = async (ch) => {
+    const [attachments, setAttachments] = useState([])
+    const click = (ch) => {
         if (channel.id !== ch.id) setChannel(ch)
     }
-    const scroll = () => {
-        const container = chat.current
-        if (Utils.isScolled(scroller.current, container)) {
-            setTimeout(() => scroller.current?.scrollIntoView(false), 1)
-        }
-    }
-    useEffect(() => {
+    useLayoutEffect(() => {
         let isMounted = true
         setMessages()
-        const ch = new Channel(server.channels[0], server)
-        setChannel(ch)
+        try {
+            const ch = new Channel(server.channels[0], server)
+            if (ch) setChannel(ch)
+        } catch {
+            const ch = new Channel({ name: "unknown" })
+            setMessages([])
+            setChannel(ch)
+        }
         setMembers([])
+        const onlineEvent = user => handleSocketEvents.memberOnline(setMembers, user)
         server.fetchMembers("no-cache").then(members => {
-            if (isMounted) setMembers(members)
-        })
-        socket.on("online", id => {
             if (!isMounted) return
-            if (usersCache[id]) usersCache[id].online = true
-            setMembers(members => {
-                const list = [...members]
-                const member = list.find(m => m._id === id)
-                if (member) member.online = true
-                return list
-            })
-        })
-        socket.on("offline", id => {
-            if (!isMounted) return
-            if (usersCache[id]) usersCache[id].online = false
-            setMembers(members => {
-                const list = [...members]
-                const member = list.find(m => m._id === id)
-                if (member) member.online = false
-                return list
-            })
+            setMembers(members)
+            socket.on("online", onlineEvent)
         })
         return () => {
-            socket.off("offline").off("online")
+            socket.off("online", onlineEvent)
             isMounted = false
         }
     }, [server, me.token])
 
-    useEffect(() => {
-        if (!channel) return
+    useLayoutEffect(() => {
+        if (!channel || !channel?.id) return
         let isMounted = true
-        setMessages()
+        if (!PreviousQueries.channels[channel.id]) setMessages()
         channel.join(socket, me.token)
         channel.fetchMessages(me.token)
-            .then(({ messages }) => {
+            .then((messages) => {
                 if (isMounted) setMessages(messages)
-                scroller.current?.scrollIntoView(false)
             })
-        socket.on("message", msg => {
+        const messageListener = msg => {
             if (!isMounted || msg.author._id === me.id) return
-            new Channel({ _id: msg.channel }).push(msg)
             if (channel.id !== msg.channel) return
-            scroll()
-            setMessages(prev => [...prev, msg])
-        })
-        socket.on("messageDelete", msg => {
+            handleSocketEvents.message(setMessages, msg)
+        }
+        const messageDeleteListener = msg => {
             if (!isMounted) return
-            if (msg.channel === channel.id) setMessages(prev => [...prev].filter(m => m._id !== msg._id))
-            new Channel({ _id: msg.channel }).deleteMessage(msg)
-        })
+            if (msg.channel === channel.id) handleSocketEvents.messageDelete(setMessages, msg)
+        }
+        const editListener = msg => (msg.channel === channel.id) && handleSocketEvents.messageEdit(setMessages, msg)
+        const memberUpdateListener = user => handleSocketEvents.memberUpdate(setMembers, setMessages, user)
+        socket.on("message", messageListener)
+        socket.on("messageDelete", messageDeleteListener)
+        socket.on("messageEdit", editListener)
+        socket.on("memberUpdate", memberUpdateListener)
         return () => {
             isMounted = false
-            socket.off("message").off("messageDelete")
+            socket.off("message", messageListener)
+                .off("messageDelete", messageDeleteListener)
+                .off("memberUpdate", memberUpdateListener)
+                .off("messageEdit", editListener)
         }
     }, [channel, me.id, me.token])
 
 
-    const send = (message, m) => {
-        setMessages(prev => [...prev, m])
-        channel.send(message)
-            .then(msg => {
-                const update = Object.assign(m, { _id: msg.id, unsent: false, invite: msg.invite, content: msg.content })
-                if (msg.attachment?.URL) update.attachment = msg.attachment
-                scroll()
-                setMessages(prev => {
-                    const allMessages = [...prev]
-                    const find = allMessages.find(ms => ms._id === m._id)
-                    allMessages[allMessages.indexOf(find)] = update
-                    return allMessages
-                })
-                update.author.online = msg.author.online
-                channel.push(update)
-            })
-            .catch((err) => {
-                console.error(err)
-                setMessages(prev => {
-                    const list = [...prev]
-                    const find = list.find(ms => ms._id === m._id)
-                    find.failed = true
-                    return list
-                })
-            })
-    }
-    const sendMessage = (k) => {
-        if (k.code !== "Enter") return
-        if (k.target.textContent.length === 0) return 
-        k.preventDefault();
-        if (!k.target.textContent) return
-        const message = { author: user, content: k.target.textContent, _id: `m${Date.now()}`, timestamp: Date.now(), unsent: true, channel: channel.id }
-        k.target.textContent = ""
-        scroll()
-        send(message, message)
-    }
-    const sendImage = (base64str) => {
-        if (!base64str) return
-        const cancelHandler = () => {
-            setView(<ImagePreview onSend={onSend} channel={channel} animation="smaller" src={base64str} onCancel={cancelHandler} />)
-            setTimeout(() => setView(), 100)
-        }
-        const onSend = (content) => {
-            const message = { author: user, content: "uploading...", _id: `m${Date.now()}`, timestamp: Date.now(), unsent: true, channel: channel.id }
-            scroll()
-            send({ author: me, attachment: base64str, content }, message)
-            cancelHandler()
-        }
-        setView(<ImagePreview onSend={onSend} channel={channel} animation="bigger" src={base64str} onCancel={cancelHandler} />)
+    const sendMessage = (k) => createMessage(k, user, channel, setMessages, attachments, setAttachments)
+    const sendImage = (file) => {
+        if (!file.data) return
+        setAttachments([file])
     }
     const getImageFromInput = async (e) => {
         const base64str = await toBase64(e.target.files[0]).catch(() => 0)
-        if (!base64str) return
-        sendImage(base64str)
+        sendImage({ data: base64str, fileName: e.target.files[0]?.name })
         e.target.value = ""
     }
     const getImageFromPaste = async (e) => {
-        if (navigator.userAgent.indexOf("Firefox") !== -1) {
-            e.preventDefault()
-            const text = e.clipboardData.getData("text")
-            e.target.textContent += text
-        }
         const items = e.clipboardData.items
         const file = items[1]?.getAsFile();
         const base64str = await toBase64(file).catch(() => 0)
-        sendImage(base64str)
+        sendImage({ data: base64str, fileName: file?.name })
+    }
+    const dropFile = async (e) => {
+        e.stopPropagation()
+        e.preventDefault()
+        const items = e.dataTransfer.items
+        const file = items[0]?.getAsFile();
+        const base64str = await toBase64(file).catch(() => 0)
+        sendImage({ data: base64str, fileName: file?.name })
+    }
+
+    const [skeleton, setSkeleton] = useState()
+    useLayoutEffect(() => {
+        if (!messages && !PreviousQueries.channels[channel?.id]) {
+            setSkeleton(<SkeletonLoadingMessage />)
+        }
+        else setSkeleton()
+    }, [messages, channel])
+
+    const [menu, setMenu] = useState()
+
+    const invite = () => {
+        setMenu(false)
+        const quit = () => {
+            setView(<IP animation="smaller" />)
+            setTimeout(() => setView(), 100)
+        }
+        const IP = ({ animation }) => {
+            return (
+                <div className={`dark-div ${animation}`}>
+                    <Utils.Out click={quit}>
+                        <InvitePeople animation={animation} quit={quit} server={server} />
+                    </Utils.Out>
+                </div>
+            )
+        }
+        setView(<IP animation="bigger" />)
+    }
+    const leave = () => {
+        fetch(`${link}leave/${server.id}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: me.token
+            }
+        })
+    }
+    const createNewChannel = () => {
+        setMenu(false)
+        setView(<CreateChannel server={server} quit={() => setView()} animation="bigger" />)
+    }
+
+    const serverSettings = () => {
+        setMenu(false)
+        const quit = () => {
+            setView(<EditServer server={server} quit={quit} animation="smaller" />)
+            setTimeout(() => setView(), 100)
+        }
+        setView(<EditServer server={server} quit={quit} animation="bigger" />)
+    }
+
+    const clickMenu = () => {
+        setMenu(true)
+        setView(
+            <Animate quit={() => setMenu(false)} normal type={1}>
+                <div className={`server-menu animated-popup`}>
+                    {server.owner === user._id && <>
+                        <p onClick={serverSettings}>Server Settings</p>
+                        <p onClick={createNewChannel}>Create Channel</p></>}
+                    <p onClick={invite} className="invite-people">Invite People</p>
+                    {server.owner !== user._id && <><div className="separator"></div>
+                        <p onClick={leave} className="leave-server">Leave Server</p></>}
+                </div>
+            </Animate>
+        )
     }
 
     return (
-        <div>
-            {view}
-            <div className="server-name">
-                <span>{server.name}</span>
-            </div>
-            <div className="channels">
-                <div style={{ marginBottom: 10 }}/>
-                {Channel.LoadChannels(server?.channels || [], server, click)}
-            </div>
-            <div className="messages">
-                <div className="name">{channel?.toTitle()}</div>
-                <main className="messages-main">
-                    <div ref={chat} className="chat">
-                        {messages && <Message.Map server={server} onJoin={onJoin} me={user} messages={messages} setView={setView} setMessages={setMessages} />}
-                        <div ref={scroller} className="scroller" />
-                    </div>
-                    <div className="controll">
-                        <div placeholder={`Send a message to ${channel?.name}`} onPaste={getImageFromPaste} onKeyDown={sendMessage}
-                            contentEditable={navigator.userAgent.indexOf("Firefox") !== -1 ? "true" : "plaintext-only"} className="not-input"></div>
-                        <div className="attach-file">
-                            <input type="file" onChange={getImageFromInput} />
-                            <Plus size={12} />
-                        </div>
-                    </div>
-                </main>
-                <div className="users">
-                    <div className="members">
-                        <User.MapMembers me={user} setView={setView} members={members} server={server} />
-                    </div>
+        <main onDragOver={e => e.preventDefault()} onDrop={dropFile} className="flexible-container">
+            <section className="left-part">
+                <header onClick={clickMenu} className={`server-name ${menu && "server-name-2"}`}>
+                    <span>{server.name}</span>
+                    <Down size="23" />
+                </header>
+                {menu}
+                <div className="channels">
+                    <div style={{ marginBottom: 10 }} />
+                    <h4 className="direct-messages">TEXT CHANNELS</h4>
+                    {Channel.LoadChannels(server?.channels || [], server, click)}
                 </div>
-            </div>
-            {me.toIcon()}
-        </div>
+                <Footer setView={setView} />
+            </section>
+            <section className="messages">
+                <div className="name">{channel?.toTitle()}</div>
+                <div className="messages-main">
+                    <div className="chat">
+                        {skeleton}
+                        <ul className="fetched-messages">
+                            <div className="dm-start">
+                                <div className="dm-avatar channel-icon"><Hashtag size="50" /></div>
+                                <h3 className="dm-username">{channel?.name}</h3>
+                                <p className="dumb-text-2">This is the start of <span>#{channel?.name}</span> message history.</p>
+                            </div>
+                            {messages && <Messages server={server} onJoin={onJoin} me={user} messages={messages} setView={setView} setMessages={setMessages} />}
+                        </ul>
+                    </div>
+                    <form onSubmit={e => e.preventDefault()} className="send-message">
+                        <div className="controll">
+                            <div className="message-manager">
+                                <ul className={`attachment-list ${attachments.length && "has-children"}`}>
+                                    <Attachments setAttachments={setAttachments} attachments={attachments} />
+                                </ul>
+                                <div className="text-content">
+                                    <div className="file">
+                                        <button className="attach-file">
+                                            <input type="file" onChange={getImageFromInput} />
+                                            <Plus size={10} />
+                                        </button>
+                                    </div>
+                                    <Input renderId={channel?.id} placeholder={`Send a message to ${channel?.name}`} onPaste={getImageFromPaste} onKeyDown={sendMessage} />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div className="users">
+                    {members.length === 0 &&
+                        <div style={{ marginTop: 20 }}>
+                            <MemberLoading times={server?.members?.length || 10} />
+                        </div>
+                    }
+                    <User.MapMembers me={user} setView={setView} members={members} server={server} />
+                </div>
+            </section>
+        </main>
     )
 }
 

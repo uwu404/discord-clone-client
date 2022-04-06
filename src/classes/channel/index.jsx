@@ -3,7 +3,8 @@ import "./index.css";
 import { link } from "../../config.json"
 import Message from "../message";
 import Hashtag from "../../icons/hashtag";
-import { usersCache } from "../user";
+import ChannelJSX from "./channel";
+import PreviousQueries from "../../cache";
 
 const components = {
     LoadChannels: (channels, server, click) => {
@@ -20,30 +21,6 @@ const components = {
     }
 }
 
-export const messages = {
-    cache: {},
-    add(key, items) {
-        for (const item of items.messages) usersCache[item.author._id] = item.author
-        this.cache[key] = items
-        const keys = Object.keys(this.cache)
-        if (keys.length > 6) delete this.cache[keys[Math.floor(Math.random() * Object.keys.length)]]
-    },
-    delete(channel, id) {
-        if (!this.cache[channel]) return
-        const filter = this.cache[channel].messages.filter(m => m?._id !== id)
-        this.cache[channel].messages = filter
-    },
-    get(channel) {
-        const cache = this.cache[channel] 
-        if (!cache) return null
-        for (const message of cache.messages) message.author = usersCache[message.author._id]
-        return cache
-    },
-    clear() {
-        this.cache = {}
-    }
-}
-
 class Channel {
     constructor(channel, server) {
         this.name = channel.name
@@ -52,17 +29,12 @@ class Channel {
     }
     static LoadChannels = components.LoadChannels
     toJSX(isClicked, click) {
-        return (
-            <div key={this.id} onClick={click} className={`channel ${isClicked ? "c-clicked" : ""}`}>
-                <Hashtag size={25} />
-                <span>{this.name}</span>
-            </div>
-        )
+        return <ChannelJSX key={this.id} isClicked={isClicked} onClick={click} channel={this} />
     }
     toTitle() {
         return (
             <div className="channel-title">
-                <Hashtag size={30} />
+                <Hashtag size={28} />
                 <span>{this.name}</span>
             </div>
         )
@@ -70,25 +42,16 @@ class Channel {
     join(socket, token) {
         socket.emit("join", { channel: this.id, Authorization: token })
     }
-    async fetchMessages(token, nocache) {
-        const headers = { Authorization: token }
-        const cache = messages.get(this.id)
-        if (cache && !nocache) return cache
-        const Messages = await fetch(`${link}channels/${this.id}/messages`, { headers })
+    async fetchMessages(token) {
+        if (PreviousQueries.channels[this.id]) return PreviousQueries.channels[this.id]
+        const messages = await fetch(`${link}channels/${this.id}/messages`, {
+            headers: { Authorization: token }
+        })
             .then(res => res.json())
             .catch(() => [])
-        messages.add(this.id, Messages)
-        return Messages
-    }
-    push(message) {
-        if (!messages.cache[this.id]) return
-        messages.add(this.id, { to: this.id, messages: [...messages.cache[this.id].messages, message] })
-    }
-    deleteMessage(message) {
-        messages.delete(this.id, message._id)
-    }
-    add(msgs) {
-        messages.add(this.id, { to: this.id, messages: msgs })
+        const setMessages = PreviousQueries.at("channels", this.id)
+        setMessages(messages.messages)
+        return messages.messages
     }
     async send(message) {
         const msg = await fetch(`${link}channels/${this.id}/messages`, {

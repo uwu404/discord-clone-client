@@ -1,12 +1,14 @@
-import { useRef, useState } from "react"
+import { useRef, useState, useContext } from "react"
 import "./index.css"
 import Signup from "../signup"
 import { link } from "../../config.json"
 import Message from "../message"
+import { Update } from ".."
 
-function Login({ update }) {
+function Login() {
     const [animation, expand] = useState("")
     const [error, setError] = useState("")
+    const update = useContext(Update)
     const signUp = () => {
         expand("expand-me")
         setTimeout(() => update(<Signup update={update} />), 200)
@@ -20,6 +22,7 @@ function Login({ update }) {
         expand("waiting")
         fetch(`${link}user?password=${password.current.value}&email=${email.current.value}`).then(res => res.json())
             .then(user => {
+                if (user.error) return setError(user.error)
                 expand("expand-all")
                 setTimeout(() => update(<Message user={user} update={update} />), 300)
             })

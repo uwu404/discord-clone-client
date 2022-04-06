@@ -1,25 +1,22 @@
 .channel{
     height: 35px;
-    line-height: 35px;
     border-radius: 3px;
-    width: calc(100% - 5px);
-    left: 5px;
+    width: 230px;
+    margin-left: 5px;
     cursor: pointer;
     transition: 0.2s;
+    display: flex;
+    align-items: center;
     user-select: none;
+    box-sizing: border-box;
     position: relative;
+    padding-left: 5px;
     color: var(--font-primary);
     font-weight: 500;
 }
-.channel span{
-    position: absolute;
-    left: 32px;
-}
 .channel svg{
-    position: absolute;
-    left: 4px;
-    top: 4px;
     fill: var(--font-secondary);
+    margin-right: 3px;
 }
 .channel:hover:not(.c-clicked){
     background-color: var(--background-secondary-hover);
@@ -31,16 +28,86 @@
     font-weight: 500;
     color: var(--font-primary);
     user-select: none;
-    position: relative;
-    left: 4px;
+    margin-left: 4px;
     font-size: 17px;
 }
 .channel-title svg{
     fill: var(--font-secondary);
-    position: relative;
-    top: 8px;
+    margin-left: 12px;
 }
 .channel-title{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+.check{
+    display: flex;
+    height: 60px;
+    padding: 10px;
+    margin-bottom: 10px;
+    --color: var(--background-tertiary);
+    border-radius: 3px;
+    background-color: var(--color);
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+}
+.channel-type h4{
+    margin: 0;
+}
+.channel-type p{
+    margin: 0;
+    font-size: 14px;
+}
+.check-boxes{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.check svg{
+    margin-left: 8px;
+    fill: var(--font-secondary);
+    margin-right: 6px;
+}
+.checker{
+    width: 16px;
+    height: 16px;
+    box-sizing: border-box;
+    background-color: var(--blue);
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px var(--color) solid;
+    margin-left: 7px;
+    box-shadow: 0 0 0 2px var(--font-primary);
+}
+.check-boxes h5{
+    color: var(--font-secondary);
+    font-size: 14px;
+    margin-top: 14px;
+    margin-bottom: 4px;
+}
+.check-boxes input{
+    margin-bottom: 20px;
+}
+.check-boxes input:focus{
+    border-color: var(--cyan);
+}
+.create-channel{
+    width: 120px;
+}
+.cant-click{
+    cursor: not-allowed;
+}
+.channel-icon.channel-icon{
+    width: 68px;
+    height: 68px;
+    overflow: hidden;
+    background-color: var(--background-hover);
+    position: relative;
+}
+.channel-icon.channel-icon svg{
     position: absolute;
-    left: 20px;
+    inset: 0;
+    margin: auto;
+    fill: var(--font-primary);
 }

@@ -6,33 +6,58 @@ import { link } from "../../config.json"
 import { io } from "socket.io-client"
 import Home from "./home"
 import HomeIcon from "../../icons/home"
-import { usersCache } from "../../classes/user"
-import { messages } from "../../classes/channel"
+import Login from "../login"
+import User from "../../classes/user"
+import "../genericstyles.css"
+import Add from "../../classes/server/addServer"
+import UserSettings from "../../classes/user/user-settings"
+import PreviousQueries from "../../cache"
+import Masks from "../masks"
 
-export const ThemeContext = createContext()
 export const ScreenContext = createContext()
 export const socket = io(link, { transports: ['websocket', 'polling', 'flashsocket'] })
 
+const notificationSound = new Audio("/notification.mp3")
+
 const Message = ({ user: me, update, dm }) => {
+    const [showSettings, setShowSettings] = useState(false)
     const [user, setUser] = useState(me)
     const [server, setServer] = useState()
+    user.notifications?.forEach(n => n.saved = true)
+    const [notifications, setNotifications] = useState(user.notifications || [])
+    const [servers, setServers] = useState(user.servers)
 
     useEffect(() => {
         socket.connect()
         socket.emit("online", me.token)
-        socket.on("memberUpdate", newUser => {
-            const user = usersCache[`${newUser._id}`]
-            user.avatarURL = newUser.avatarURL
-            user.username = newUser.username
+        socket.on("disconnect", () => {
+            update(<Login update={update} />)
         })
+        socket.on("notification", (notification) => {
+            notificationSound.play()
+            if (notification.type === "dm") setNotifications(prev => [...prev, notification])
+        })
+        socket.on("leave", (server) => {
+            setServer()
+            setUser(prev => Object.assign(prev, { servers: [...prev.servers].filter(s => s._id !== `${server._id}`) }))
+            setServers(prev => [...prev].filter(s => s._id !== `${server._id}`))
+        })
+        socket.on("channelCreate", (channel) => {
+            setServers(prev => {
+                const servers = [...prev]
+                const server = servers.find(s => s._id === channel.server)
+                server.channels.push(channel)
+                return servers
+            })
+        })
+        const init = PreviousQueries.init()
         return () => {
+            init()
+            socket.off("disconnect").off("notification").off("channelCreate")
             socket.disconnect()
-            messages.clear()
-            for (const key in usersCache) {
-                delete usersCache[key]
-            }
+            PreviousQueries.clear()
         }
-    }, [me])
+    }, [me, update])
 
     const [theme, setTheme] = useState(localStorage.getItem("theme") || "light")
     const [screen, setScreen] = useState(<Home user={user} update={update} />)
@@ -40,7 +65,6 @@ const Message = ({ user: me, update, dm }) => {
         if (server?.id === s.id) return
         setServer(s)
     }
-    const [servers, setServers] = useState(user.servers)
     const handlenewServer = (user, server) => {
         user.servers.push(server)
         setServers(user.servers)
@@ -54,6 +78,16 @@ const Message = ({ user: me, update, dm }) => {
         const join = (server) => handlenewServer(user, server)
         if (server) setScreen(<Main socket={socket} onJoin={join} update={update} server={server} user={user} />)
         else setScreen(<Home onJoin={join} dm={dm} user={user} update={update} />)
+        socket.on("serverUpdate", server => {
+            setServers(prev => {
+                const servers = [...prev]
+                const sv = servers.find(s => s._id === server._id.toString())
+                sv.icon = server.icon
+                sv.name = server.name
+                return servers
+            })
+        })
+        return () => socket.off("serverUpdate")
     }, [server, update, user, dm])
 
     const homeClick = () => server && setServer()
@@ -63,23 +97,47 @@ const Message = ({ user: me, update, dm }) => {
         return user.servers.indexOf(iserver)
     }
 
+    const providerValue = { setScreen, setServer, setUser, not: [notifications, setNotifications], user, setTheme, setView, setShowSettings }
+
     return (
-        <ThemeContext.Provider value={setTheme}>
-            <ScreenContext.Provider value={{ setScreen, setServer, setUser }}>
-                <div theme={theme} className="platform">
-                    {view}
-                    <div className="navigate">
-                        <div style={{ marginTop: 10, marginBottom: 3 }} className={`server ${!server && "click"}`}>
-                            <div onClick={homeClick} className={`home-button ${!server && "isclicked"}`}><HomeIcon /></div>
+        <ScreenContext.Provider value={providerValue}>
+            <div className={`platform ${showSettings && "is-showing-settings"} ${theme}`}>
+                {view}
+                {(showSettings || (showSettings === "")) && <UserSettings user={new User(user)} />}
+                <div className="screen">
+                    <nav className="navigate">
+                        <div style={{ marginTop: 10, marginBottom: 3 }} className={`server-block ${!server && "clicked"}`}>
+                            <div title="Home" className="server">
+                                <div onClick={homeClick} className={`home-button server-icon ${!server && "isclicked"}`}><HomeIcon /></div>
+                            </div>
+                            <div className="server-marker" />
                         </div>
+                        {notifications.map((n, i) => {
+                            const u = new User(n.user)
+                            if (notifications.findIndex(not => not.user._id === u.id) !== i) return null
+                            const dm = () => {
+                                setServer()
+                                setScreen(<Home onJoin={server => create(user, server)} update={update} dm={{ user: u }} user={user} />)
+                            }
+                            return (
+                                <div key={u.id} className="server-block">
+                                    <div className={`server nt ${!n.saved && "nta"}`}>
+                                        <img onClick={dm} width="48" height="48" alt="icon" src={u.displayAvatarURL(90)} className="server-icon" />
+                                        <div className="notification">{notifications.filter(not => not.user._id === u.id).length}</div>
+                                    </div>
+                                    <div className="server-marker" />
+                                </div>
+                            )
+                        })}
                         <div className="border-bottom" />
-                        {<Server.LoadServers index={index()} me={user} servers={servers} click={click} isHome={!server} />}
-                        {<Server.Add user={user} onCreate={create} view={setView} />}
-                    </div>
+                        <Server.LoadServers index={index()} me={user} servers={servers} click={click} isHome={!server} />
+                        <Add user={user} onCreate={create} view={setView} />
+                    </nav>
                     {screen}
                 </div>
-            </ScreenContext.Provider>
-        </ThemeContext.Provider>
+            </div>
+            <Masks />
+        </ScreenContext.Provider>
     )
 }
 

@@ -1,0 +1,49 @@
+.editor-text{
+    font-size: 13px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    user-select: none;
+}
+.editor-text span{
+    color: var(--cyan);
+    cursor: pointer;
+}
+.editor-text span:hover{
+    text-decoration: underline;
+}
+.edited{
+    margin-left: 5px;
+    color: var(--font-secondary);
+    font-size: 0.7em;
+    line-height: 1rem;
+    user-select: none;
+}
+.message-editor ~ .message-params{
+    display: none;
+}
+.message-div.clicked .message-params{
+    visibility: visible;
+}
+.outer-div ~ .screen .message-div:not(.clicked):hover{
+    background-color: transparent;
+}
+.outer-div ~ .screen .message-div:not(.clicked) .message-params{
+    display: none;
+}
+.new-day{
+    display: flex;
+    margin: 5px 20px;
+    font-size: 13px;
+    user-select: none;
+}
+.new-day span{
+    margin: 0 7px;
+    color: var(--font-secondary);
+    font-weight: 500;
+}
+.new-day div{
+    height: 1px;
+    background-color: var(--font-background);
+    flex-grow: 1;
+    margin: auto 0;
+}

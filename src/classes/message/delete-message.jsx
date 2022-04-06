@@ -1,24 +1,23 @@
-import Utils from "../../utils"
+import Animate from "../../app/animate"
+import MessageJSX from "./message"
 
-const MessageDelete = ({ name, message, onCancel }) => {
+const MessageDelete = ({ message, onCancel }) => {
     const del = () => {
         message.delete()
         onCancel()
     }
     return (
-        <div className={`dark-div ${name}`}>
-            <Utils.Out click={onCancel}>
-                <div className={`dlt ${name}`}>
-                    <h2 className="some-text">Delete message</h2>
-                    <h4 className="dumb-question">Are you sure you want to delete this message?</h4>
-                    <div className="preview-message">{message.toJSX()}</div>
-                    <div style={{ position: "relative", height: "70px" }} className="create-server">
-                        <button className="create-server-button delete-message" onClick={del}>Delete</button>
-                        <button style={{ color: "var(--font-primary)" }} onClick={onCancel} className="create-server-button cancel-creating">Cancel</button>
-                    </div>
+        <Animate>
+            <div className={`dlt animated-popup`}>
+                <h2 className="some-text">Delete message</h2>
+                <h4 className="dumb-question">Are you sure you want to delete this message?</h4>
+                <div className="preview-message"><MessageJSX full={true} message={message} /></div>
+                <div className="lower-section">
+                    <button onClick={onCancel} className="generic-button cancel">Cancel</button>
+                    <button className="generic-button error" onClick={del}>Delete</button>
                 </div>
-            </Utils.Out>
-        </div>
+            </div>
+        </Animate>
     )
 }
 

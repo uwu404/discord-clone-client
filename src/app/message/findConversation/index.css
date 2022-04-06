@@ -1,0 +1,50 @@
+.find-conversation.find-conversation{
+    width: 550px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding: 20px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+}
+.find-conversation .list{
+    border: none;
+    padding-top: 31px;
+    padding-right: 10px;
+    box-sizing: content-box;
+}
+.big-input{
+    width: 100%;
+    box-sizing: border-box;
+    height: 80px;
+    background-color: var(--font-background-secondary);
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: -3px;
+    color: var(--font-primary);
+    font-size: 23px;
+    padding: 5px 10px;
+    box-shadow: 0 5px 7px 3px rgba(0, 0, 0, 0.13);
+    position: relative;
+}
+.big-input::placeholder{
+    color: var(--font-secondary);
+}
+.search-result{
+    display: flex;
+    padding-left: 10px;
+    height: 35px;
+    align-items: center;
+    border-radius: 3px;
+    color: var(--font-primary);
+    font-size: 15px;
+    user-select: none;
+    cursor: pointer;
+}
+.search-result:hover{
+    background-color: var(--background-hover);
+}
+.icon-avatar{
+    margin-right: 7px;
+}

@@ -1,0 +1,100 @@
+.view-profile{
+    width: 600px;
+    height: fit-content;
+    margin: auto;
+    border-radius: 8px;
+    overflow: hidden;
+    inset: 0;
+    position: fixed;
+    background-color: var(--background-floating);
+}
+.pfp-wrapper{
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 8px var(--background-floating) solid;
+    position: absolute;
+    top: 60px;
+    left: 15px;
+}
+.pfp-2{
+    border-radius: 50%;
+    -webkit-user-drag: none;
+}
+.user-bg{
+    width: 100%;
+    height: 120px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 99999px;
+}
+.uwu-20{
+    margin-top: 83px;
+    margin-left: 15px;
+    margin-bottom: 30px;
+    font-size: 20px;
+    color: var(--font-primary);
+}
+.uwu-20 span{
+    color: var(--font-secondary);
+}
+.more{
+    display: flex;
+    color: var(--font-primary);
+    font-size: 13px;
+    margin-left: 15px;
+    user-select: none;
+}
+.more-div{
+    margin-right: 20px;
+    padding-bottom: 15px;
+    border-bottom: 3px transparent solid;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--font-secondary);
+}
+.more-div:hover{
+    border-color: var(--font-primary);
+}
+.more-div.clicked{
+    border-color: var(--font-primary);
+    color: var(--font-primary);
+    cursor: default;
+}
+.more-with-border{
+    width: 100%;
+    border-bottom: 1px var(--font-background) solid;
+}
+.even-more{
+    height: calc(40vh - 100px);
+    max-height: 170px;
+}
+.send-req{
+    position: absolute;
+    right: 20px;
+    top: 130px;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    border-radius: 3px;
+    background-color: var(--green);
+    transition: 0.2s;
+}
+.send-req:hover{
+    background-color: var(--green-hover);
+}
+.profile-status{
+    transform: scale(1.3);
+    transform-origin: bottom right;
+}
+.server-ico.friend-pfp{
+    border-radius: 10px;
+}
+.mutual-server.friend::after{
+    display: none;
+}
+.mutual-server.friend:last-child{
+    margin-bottom: 10px;
+}

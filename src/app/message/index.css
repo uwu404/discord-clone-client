@@ -4,139 +4,236 @@
     left: 0;
     height: 100%;
     width: 100%;
-    background: var(--purple);
+    display: flex;
+    background-color: var(--background-tertiary);
+}
+.screen{
+    display: flex;
+    flex-grow: 1;
+    transition: 0.15s;
+}
+.platform.is-showing-settings .screen{
+    transform: scale(0.8);
+}
+@keyframes display {
+    from {
+        opacity: 0.4;
+        transform: scale(1.2)
+    } to {
+        opacity: 1;
+        transform: scale(1)
+    }
+}
+@keyframes displayReverse {
+    from {
+        opacity: 1;
+        transform: scale(1)
+    } to {
+        opacity: 0;
+        transform: scale(1.2)
+    }
+}
+.settings{
+    animation: display ease-out 0.15s 0s;
+}
+.settings.is-being-removed{
+    animation: displayReverse ease-out 0.15s 0s;
+}
+.flexible-container{
+    display: flex;
+    width: 100%;
 }
 .messages{
     background-color: var(--background-primary);
-    width: calc(100% - 319px);
     height: 100%;
-    position: fixed;
-    border-left: 1px var(--background-secondary) solid;
-    bottom: 0;
     overflow: hidden;
-    left: 319px;
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    grid-template-rows: 48px 1fr;
+    grid-template-areas: 
+    "header header"
+    "messages users";
 }
 .navigate{
     background-color: var(--background-tertiary);
-    width: 69px;
+    width: 72px;
     overflow-y: scroll;
-    overflow-x: visible;
+    overflow-x: hidden;
     scrollbar-width: none;
     height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
+    flex-shrink: 0;
 }
 .navigate::-webkit-scrollbar{
     display: none;
 }
 .name{
-    height: 50px;
-    position: absolute;
-    line-height: 50px;
-    box-shadow: 1px 0 0 1px var(--shadow);
-    top: 0; left: 0;
-    z-index: 1;
+    box-shadow: 0 1px 0 var(--shadow);
+    position: relative;
+    display: flex;
+    align-items: center;
     min-width: max-content;
-    width: 100%;
+    grid-area: header;
     background: var(--background-primary);
+    z-index: 1;
+}
+.left-part{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 240px;
+    flex-shrink: 0;
+    height: 100%;
 }
 .channels{
-    width: 250px;
-    position: fixed;
+    width: 100%;
     left: 69px;
     top: 51px;
+    scrollbar-color: var(--background-tertiary) transparent;
+    scrollbar-width: thin;
     display: block;
-    overflow-y: scroll;
+    flex: 1 1 auto;
+    overflow-y: hidden;
     overflow-x: hidden;
-    height: calc(100% - 101px);
     background-color: var(--background-secondary);
 }
-.members::-webkit-scrollbar,
+.channels:hover{
+    overflow-y: auto;
+}
+.message-manager::-webkit-scrollbar,
+.users::-webkit-scrollbar,
 .channels::-webkit-scrollbar{
-    visibility: hidden;
     width: 5px;
     background-color: var(--background-secondary);
 }
-.members:hover::-webkit-scrollbar,
-.channels:hover::-webkit-scrollbar{
-    visibility: visible;
-}
-.members::-webkit-scrollbar-thumb,
+.message-manager::-webkit-scrollbar-thumb,
+.users::-webkit-scrollbar-thumb,
 .channels::-webkit-scrollbar-thumb{
     background-color: var(--background-tertiary);
 }
+.message-manager::-webkit-scrollbar{
+    border-radius: 5px;
+}
+.message-manager::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+}
 .server-name{
-    height: 50px;
-    width: 250px;
-    position: fixed;
-    left: 69px;
-    top: 0;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    height: 48px;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 48px;
+    transition: 0.2s;
     user-select: none;
     background-color: var(--background-secondary);
-    border-bottom: 1px var(--background-tertiary) solid;
+    box-shadow: 0 1px 0 var(--shadow);
+    padding: 0 10px 0 13px;
+}
+.server-name:not(.home-search):hover, .server-name-2{
+    background-color: var(--background-xx);
+}
+.server-name-2{
+    pointer-events: none;
+}
+.server-name-2 svg{
+    transform: rotate(0.5turn);
+}
+.server-name svg{
+    transition: 0.2s;
+    justify-self: right;
+    margin-left: auto;
+    color: var(--icon-normal);
 }
 .server-name span{
     color: var(--font-primary);
     font-size: 16px;
     font-weight: 600;
-    top: 15px;
-    position: relative; 
-    left: 14px;
+    max-width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .messages-main{
-    position: absolute;
-    left: 0;
-    width: calc(100% - 250px);
-    height: calc(100% - 50px);
-    top: 50px;
+    grid-area: messages;
+    width: 100%;
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-flow: column nowrap;
 }
 .users{
     background-color: var(--background-secondary);
     height: 100%;
-    position: absolute;
-    width: 250px;
-    top: 50px;
-    left: calc(100% - 250px);
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: var(--background-tertiary) transparent;
+    grid-area: users;
 }
 .controll{
-    width: calc(100% - 40px);
-    position: absolute;
-    left: 20px;
-    bottom: 25px;
+    position: relative;
+    margin: -7px 16px 24px 16px;
 }
 .not-input{
-    width: 100%;
-    padding: 13px 22px;
-    padding-left: 50px;
+    padding: 0 14px;
     color: var(--font-primary);
     box-sizing: border-box;
     font-size: 15px;
-    background-color: var(--font-background);
-    border-radius: 6px;
     font-weight: 400;
     outline: none;
+    min-height: 44px;
     overflow-x: hidden;
+    caret-color: var(--font-primary);
+    line-height: 1.2em;
+    scrollbar-width: none;
+    flex-grow: 1;
+    flex-basis: 0;
 }
-.not-input:empty::before{
+.plain-text{
+    outline: none;
+    min-height: inherit;
+    box-sizing: border-box;
+    padding: 13px 0;
+    max-width: 100%;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+.plain-text:empty::before{
     content: attr(placeholder);
     white-space: nowrap;
     overflow: hidden;
     color: rgb(101, 101, 122);
     cursor: text;
 }
+.file{
+    width: 42px;
+    height: 44px;
+    position: sticky;
+    top: 0;
+}
+.text-content{
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    background-color: var(--font-background);
+}
 .attach-file{
     height: 20px;
     font-size: 40px;
     color: var(--font-background);
-    left: 15px;
     user-select: none;
-    background-color: var(--font-secondary);
+    background-color: var(--icon-normal);
     cursor: pointer;
     width: 20px;
     position: absolute;
     border-radius: 50%;
-    top: 12px;
+    border: none;
+    inset: 0 0 0 14px;
+    margin: auto;
 }
 .attach-file:hover{
     background-color: var(--font-primary);
@@ -161,8 +258,8 @@
     cursor: pointer;
 }
 .home-button{
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     position: relative;
     cursor: pointer;
@@ -181,77 +278,116 @@
     transition: 0.2s;
     position: absolute;
     fill: var(--font-primary);
-    top: 0;
+    inset: 0;
     width: 35px;
     height: 35px;
-    bottom: 0;
-    left: 0;
-    right: 0;
     margin: auto;
+    transform: translateX(-1px);
 }
 .border-bottom{
     width: 40px;
     background: var(--background-secondary);
     height: 2px;
-    margin-top: 7px;
-    margin-bottom: 7px;
     position: relative;
-    left: calc(50% - (40px/2));
+    margin: 7px 0 7px 14.5px;
 }
 .home-button:hover{
     transform: scale(1);
 }
 .chat{
-    position: absolute;
-    width: calc(100% - 7px);
-    left: 0;
-    height: calc(100% - 60px);
-    top: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border-right: 4px transparent solid;
     overflow-y: scroll;
     scrollbar-color: var(--background-tertiary) var(--background-secondary);
     scrollbar-width: thin;
+    display: flex;
+    flex-direction: column-reverse;
     overflow-x: hidden;
+    scroll-behavior: smooth;
 }
-@media only screen and (max-width: 600px) {
-    .messages-main{
-        width: 100%;
-    }
-    .users{
-        display: none;
-    }
-    .controll{
-        width: calc(100% - 40px - 72px);
-        left: 20px;
-    }
-}
-.chat::-webkit-scrollbar, .list::-webkit-scrollbar{
+div:is(.main-content, .chat, .list)::-webkit-scrollbar{
     display: block;
     width: 8px;
 }
-.chat::-webkit-scrollbar-track, .list::-webkit-scrollbar-track{
+div:is(.main-content, .chat, .list)::-webkit-scrollbar-track{
     background: transparent;
 }
-.chat::-webkit-scrollbar-track-piece, .list::-webkit-scrollbar-track-piece{
+div:is(.main-content, .chat, .list)::-webkit-scrollbar-track-piece{
     background: var(--background-secondary);
     border-radius: 8px;
 }
-.chat::-webkit-scrollbar-track-piece:end{
-    margin-bottom: 23px;
+div:is(.main-content, .chat)::-webkit-scrollbar-track-piece:end{
+    margin-bottom: 11px;
 }
-.chat::-webkit-scrollbar-track-piece:start, .list::-webkit-scrollbar-track-piece:start{
-    margin-top: 10px;
+div:is(.main-content, .chat, .list)::-webkit-scrollbar-track-piece:start{
+    margin-top: 5px;
 }
-.chat::-webkit-scrollbar-thumb{
+div:is(.main-content, .chat, .list)::-webkit-scrollbar-thumb{
     background: var(--background-tertiary);
     border-radius: 8px;
 }
-.scroller{
-    height: 30px;
+.connecting{
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+    height: 100%;
+    top: 0; left: 0;
+    background-color: var(--background-primary);
 }
-.members{
+.notification{
+    background-color: var(--red);
+    width: fit-content;
+    height: fit-content;
+    padding: 1px 5px;
+    border-radius: 15px;
     position: absolute;
-    left: 0; top: 0;
-    background-color: var(--background-secondary);
-    width: 100%; height: 100%;
-    overflow-y: scroll;
+    font-size: 13px;
+    bottom: -2px;
+    right: -2px;
+    border: 3px var(--background-tertiary) solid;
+    font-weight: 600;
+    pointer-events: none;
+    user-select: none;
+    color: white;
+}
+
+.nt:active{
+    z-index: 3;
+    transition: 0.2s;
+    opacity: 0.5;
+}
+@keyframes notification {
+    from {
+        transform: scale(0.6);
+        margin-top: -5px;
+        margin-bottom: -5px;
+    } to {
+        transform: scale(1);
+    }
+}
+.nta{
+    animation: notification 0.1s forwards;
+}
+.invite-people{
+    color: var(--blue);
+}
+.server-menu p:hover{
+    color: white;
+}
+.separator{
+    background-color: var(--font-background);
+    width: 95%;
+    margin: 3px 0;
+    height: 1px;
+}
+.leave-server{
+    color: var(--red);
+}
+.leave-server.leave-server:hover{
+    background-color: var(--red);
+}
+.fetched-messages{
+    padding-bottom: 25px;
 }
