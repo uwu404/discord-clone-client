@@ -1,0 +1,30 @@
+.loading-screen{
+    background-color: var(--background-primary);
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.react{
+    object-fit: contain;
+}
+.spinner{
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    animation: spinner 2s linear infinite;
+}
+@keyframes spinner{
+    from {
+        transform: rotate(0deg);
+    } to {
+        transform: rotate(360deg);
+    }
+}
+.loading-text{
+    color: var(--font-primary);
+    font-size: 16px;
+    padding-top: 10px;
+    text-align: center;
+}

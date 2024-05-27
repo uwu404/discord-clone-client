@@ -1,13 +1,32 @@
 import { useContext, useState } from "react"
 import { link } from "../../config.json"
-import { ScreenContext } from "../../app/message"
-import Animate from "../../app/animate"
+import { AppContext } from "../../app/message"
+import Animate from "../../global/animate"
 
-const Attachment = ({ message }) => {
-    const { setView } = useContext(ScreenContext)
-    const click = () => setView(
+const getdimensions = (width, height) => {
+    if (height < 300 && width < 400) return {
+        height: height,
+        width: width
+    }
+    if (height >= width) {
+        return { height: 300, width: width / height * 300 }
+    }
+    if (height / width * 400 > 300) return { height: 300, width: width / height * 300 }
+    return { width: 400, height: height / width * 400 }
+}
+
+const displayURL = (attachment) => {
+    const dimensions = getdimensions(attachment.width, attachment.height)
+    const query = dimensions.height !== attachment.height && dimensions.width !== attachment.width ?
+        `?width=${Math.trunc(dimensions.width)}&height=${Math.trunc(dimensions.height)}` : ""
+    return link + attachment.URL + query
+}
+
+const Attachment = ({ attachment }) => {
+    const { setLayer } = useContext(AppContext)
+    const click = () => setLayer(
         <Animate>
-            <img className={`view-attachment animated-popup`} src={link + message.attachment.URL} alt="attachment" />
+            <img className={`view-attachment animated-popup`} src={link + attachment.URL} alt="attachment" />
         </Animate>
     )
     const [bg, setBg] = useState(
@@ -16,11 +35,23 @@ const Attachment = ({ message }) => {
             <div className="rotating-div-2" />
         </div>
     )
-    if (!message.attachment?.URL) return null
+    const dimensions = getdimensions(attachment.width, attachment.height)
+
+
+    if (attachment.fileType !== "image") return null
     return (
         <div className="image-div">
             {bg}
-            <img onLoad={() => setBg()} loading="lazy" width={message.calculateImage.width} height={message.calculateImage.height} src={message.displayAttachmentURL} className="message-attachment" alt="attachment" onClick={click} />
+            <img
+                onLoad={() => setBg()}
+                loading="lazy"
+                width={dimensions.width}
+                height={dimensions.height}
+                src={displayURL(attachment)}
+                className="message-attachment"
+                alt="attachment"
+                onClick={click}
+            />
         </div>
     )
 }

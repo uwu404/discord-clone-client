@@ -1,0 +1,84 @@
+.find-conversation.find-conversation{
+    width: 570px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 20px;
+    padding-bottom: 10px;
+    height: 370px;
+    display: flex;
+    flex-direction: column;
+}
+.find-conversation .list{
+    border: none;
+    padding-top: 31px;
+    padding-right: 10px;
+    padding: 31px 10px 0 0;
+    box-sizing: content-box;
+}
+.find-conversation .list::-webkit-scrollbar-track-piece:end{
+    margin-bottom: 0;
+}
+.big-input{
+    width: 100%;
+    box-sizing: border-box;
+    height: 100px;
+    background-color: var(--background-tertiary);
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: -3px;
+    color: var(--font-primary);
+    font-size: 21px;
+    padding: 5px 15px;
+    box-shadow: 0 5px 7px 3px rgba(0, 0, 0, 0.13);
+    position: relative;
+}
+.search-result{
+    display: flex;
+    padding-left: 10px;
+    height: 35px;
+    align-items: center;
+    border-radius: 3px;
+    color: var(--font-primary);
+    font-size: 15px;
+    user-select: none;
+    cursor: pointer;
+}
+.search-result:hover{
+    background-color: var(--background-hover);
+}
+.icon-avatar{
+    margin-right: 7px;
+}
+.search-result svg{
+    margin-right: 7px;
+    fill: var(--font-secondary);
+}
+.channelserver{
+    margin-left: auto;
+    margin-right: 10px;
+    font-size: 13px;
+    color: var(--font-secondary);
+}
+.searching-channels{
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--font-secondary);
+    margin-left: 10px;
+}
+.searching-users{
+    margin-left: 10px;
+    color: var(--font-secondary);
+}
+.protip{
+    color: var(--font-secondary);
+    font-size: 12px;
+}
+.highlight-green{
+    color: var(--green);
+    font-weight: 600;
+}
+.protips{
+    padding-top: 5px;
+    user-select: none;
+}

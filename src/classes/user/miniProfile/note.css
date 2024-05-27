@@ -1,0 +1,28 @@
+.note h5{
+    margin-bottom: 5px;
+    font-weight: 900;
+    margin-top: 0;
+    font-size: 13px;
+    color: var(--font-primary);
+}
+.note textarea{
+    width: 100%;
+    height: 38px;
+    font-size: 13px;
+    resize: none;
+    box-sizing: border-box;
+    outline: none;
+    border-radius: 3px;
+    color: var(--font-primary);
+    border: none;
+    background-color: inherit;
+    transition: 0.2s;
+}
+.note textarea:focus{
+    background-color: var(--background-hover);
+}
+.note{
+    width: 100%;
+    user-select: none;
+    position: relative;
+}

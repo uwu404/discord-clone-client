@@ -5,7 +5,7 @@
     height: 100%;
     width: 100%;
     display: flex;
-    background-color: var(--background-tertiary);
+    background-color: var(--background-secondary);
 }
 .screen{
     display: flex;
@@ -17,7 +17,7 @@
 }
 @keyframes display {
     from {
-        opacity: 0.4;
+        opacity: 0.5;
         transform: scale(1.2)
     } to {
         opacity: 1;
@@ -30,14 +30,15 @@
         transform: scale(1)
     } to {
         opacity: 0;
-        transform: scale(1.2)
+        transform: scale(1.2);
+        display: none;
     }
 }
 .settings{
     animation: display ease-out 0.15s 0s;
 }
 .settings.is-being-removed{
-    animation: displayReverse ease-out 0.15s 0s;
+    animation: displayReverse forwards 0.15s;
 }
 .flexible-container{
     display: flex;
@@ -55,6 +56,11 @@
     "header header"
     "messages users";
 }
+.messages.hide-members{
+    grid-template-areas: 
+    "header header"
+    "messages messages";
+}
 .navigate{
     background-color: var(--background-tertiary);
     width: 72px;
@@ -68,7 +74,7 @@
     display: none;
 }
 .name{
-    box-shadow: 0 1px 0 var(--shadow);
+    box-shadow: 0 1px 2px 0 var(--shadow);
     position: relative;
     display: flex;
     align-items: center;
@@ -76,6 +82,9 @@
     grid-area: header;
     background: var(--background-primary);
     z-index: 1;
+    color: var(--font-secondary);
+    padding: 0 15px;
+    justify-content: space-between;
 }
 .left-part{
     display: flex;
@@ -96,6 +105,9 @@
     overflow-y: hidden;
     overflow-x: hidden;
     background-color: var(--background-secondary);
+}
+.i-pad{
+    padding: 10px 8px 0;
 }
 .channels:hover{
     overflow-y: auto;
@@ -120,29 +132,32 @@
 .server-name{
     position: relative;
     cursor: pointer;
-    display: flex;
-    align-items: center;
     height: 48px;
     box-sizing: border-box;
     width: 100%;
     min-height: 48px;
-    transition: 0.2s;
     user-select: none;
     background-color: var(--background-secondary);
-    box-shadow: 0 1px 0 var(--shadow);
-    padding: 0 10px 0 13px;
+    box-shadow: 0 1px 2px 0 var(--shadow);
+    display: flex;
+    align-items: center;
 }
-.server-name:not(.home-search):hover, .server-name-2{
-    background-color: var(--background-xx);
+.server-name-3{
+    display: flex;
+    align-items: center;
+    transition: 0.2s;
+    height: 100%;
+    width: 100%;
+    padding: 0 15px 0 16px;
+    box-sizing: border-box;
 }
-.server-name-2{
-    pointer-events: none;
+.server-name-3:hover, .server-name-2{
+    background-color: var(--background-hover);
 }
 .server-name-2 svg{
-    transform: rotate(0.5turn);
+    transform: rotate(0.125turn);
 }
 .server-name svg{
-    transition: 0.2s;
     justify-self: right;
     margin-left: auto;
     color: var(--icon-normal);
@@ -159,6 +174,7 @@
     grid-area: messages;
     width: 100%;
     position: relative;
+    overflow: hidden;
     min-width: 0;
     min-height: 0;
     display: flex;
@@ -173,6 +189,9 @@
     scrollbar-width: thin;
     scrollbar-color: var(--background-tertiary) transparent;
     grid-area: users;
+}
+.wrapper-xyz{
+    padding-left: 8px;
 }
 .controll{
     position: relative;
@@ -247,10 +266,10 @@
 }
 .attach-file input{
     position: absolute;
-    width: 100%;
+    width: 20px;
     opacity: 0;
     cursor: pointer;
-    height: 100%;
+    height: 20px;
     border-radius: 50%;
     top: 0; left: 0;
 }
@@ -307,24 +326,24 @@
     overflow-x: hidden;
     scroll-behavior: smooth;
 }
-div:is(.main-content, .chat, .list)::-webkit-scrollbar{
+.stylish-scrollbar::-webkit-scrollbar{
     display: block;
     width: 8px;
 }
-div:is(.main-content, .chat, .list)::-webkit-scrollbar-track{
+.stylish-scrollbar::-webkit-scrollbar-track{
     background: transparent;
 }
-div:is(.main-content, .chat, .list)::-webkit-scrollbar-track-piece{
+.stylish-scrollbar::-webkit-scrollbar-track-piece{
     background: var(--background-secondary);
     border-radius: 8px;
 }
-div:is(.main-content, .chat)::-webkit-scrollbar-track-piece:end{
+.stylish-scrollbar::-webkit-scrollbar-track-piece:end{
     margin-bottom: 11px;
 }
-div:is(.main-content, .chat, .list)::-webkit-scrollbar-track-piece:start{
+.stylish-scrollbar::-webkit-scrollbar-track-piece:start{
     margin-top: 5px;
 }
-div:is(.main-content, .chat, .list)::-webkit-scrollbar-thumb{
+.stylish-scrollbar::-webkit-scrollbar-thumb{
     background: var(--background-tertiary);
     border-radius: 8px;
 }
@@ -390,4 +409,14 @@ div:is(.main-content, .chat, .list)::-webkit-scrollbar-thumb{
 }
 .fetched-messages{
     padding-bottom: 25px;
+}
+.remote-stream{
+    position: fixed;
+    background-color: black;
+    height: 150px;
+    width: 266px;
+    z-index: 9;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
 }

@@ -1,0 +1,133 @@
+.my-opinion{
+    padding-top: 0.5em;
+    font-size: 14px;
+    border-top: 1px var(--seperator) solid;
+    font-weight: 500;
+}
+.your-opinion{
+    padding: 0.7em;
+    color: var(--font-secondary);
+    user-select: none;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    height: 32px;
+    box-sizing: border-box;
+    justify-content: space-between;
+}
+.your-opinion:is(:hover, .is-hovered){
+    background-color: var(--background-hover);
+}
+.expand-right{
+    transform: rotate(-90deg);
+}
+.footer{
+    height: 52px;
+    background-color: var(--background-xx);
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    padding-left: 8px;
+    padding: 0 8px 1px 6px;
+    padding-bottom: 1px;
+}
+.connection{
+    background-color: var(--background-xx);
+    color: var(--font-primary);
+    border-bottom: 1px var(--shadow) solid;
+    padding: 8px;
+    box-sizing: border-box;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    position: relative;
+}
+.connection-name{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.connection h3 {
+    color: var(--green-hover);
+    margin: 0;
+}
+.connection h3:hover{
+    text-decoration: underline;
+}
+.leave-vc.leave-vc{
+    margin: 0;
+}
+.leave-vc svg{
+    fill: var(--font-secondary)
+}
+.user-av{
+    pointer-events: none;
+}
+.user-av img{
+    object-fit: cover;
+    -webkit-user-drag: none;
+}
+.flex-m13{
+    display: flex;
+    cursor: pointer;
+    padding: 3px 5px 3px 2px;
+    border-radius: 4px;
+    width: 120px;
+    box-sizing: border-box;
+}
+.flex-m13:hover{
+    background-color: var(--background-hover);
+}
+.icon-div{
+    width: 32px;
+    height: 32px;
+    position: relative;
+    bottom: 1px;
+}
+.icon-status.status{
+    box-shadow: 0 0 0 5px var(--background-xx);
+    inset: auto 0 0 auto;
+    transform: scale(0.55);
+    transform-origin: right bottom;
+}
+.my-username{
+    user-select: none;
+    font-size: 14px;
+    font-weight: 600;
+    margin: auto 0 auto 8px;
+    color: var(--font-primary);
+}
+.my-username span{
+    display: block;
+    font-weight: 400;
+    color: var(--font-secondary);
+    font-size: 12px;
+}
+.settings-button{
+    color: var(--icon-normal);
+    width: 32px;
+    transition: 0.2s;
+    height: 32px;
+    cursor: pointer;
+    justify-self: right;
+    margin: 0 0 0 auto;
+    position: relative;
+    border-radius: 5px;
+}
+.settings-button.user-settings-button{
+    margin-left: 0;
+}
+.settings-button svg{
+    margin: auto;
+    position: absolute;
+    inset: 0;
+    fill: var(--icon-normal)
+}
+.settings-button:hover{
+    background-color: var(--background-hover);
+}
+

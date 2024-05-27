@@ -1,0 +1,47 @@
+.customizing-my-profile h5,
+.roles h5{
+    position: relative;
+    margin-top: 0;
+    color: var(--font-primary);
+    font-size: 13px;
+    font-weight: 900;
+}
+.roles h5{
+    margin-bottom: 5px;
+}
+.role{
+    border-color: var(--green);
+    width: fit-content;
+    max-width: calc(100% - 28px);
+    overflow: hidden;
+    color: var(--font-primary);
+    padding: 4px 7px;
+    position: relative;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: var(--font-background);
+    padding-left: 21px;
+    margin-right: 5px;
+    display: inline-block;
+    border-radius: 3px;
+}
+.role::before{
+    content: "";
+    width: 0;
+    height: 0;
+    top: 5px;
+    position: absolute;
+    left: 4px;
+    display: block;
+    border-radius: 50%;
+    border: 6px solid;
+    border-color: inherit;
+}
+.roles{
+    width: 100%;
+    user-select: none;
+    position: relative;
+}
+.roles:last-child .line{
+    display: none;
+}

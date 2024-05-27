@@ -1,21 +1,26 @@
 import Server from "../server"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { link } from "../../config.json"
+import { UserContext } from "../../app/message"
 
-const Invite = ({ invite, code, onJoin, me }) => {
+const Invite = ({ invite, code, me }) => {
     const server = new Server(invite)
-    const text = me.servers.find(s => s._id === server.id) ? "Joined" : "Join"
+    const { servers } = useContext(UserContext)
+    const text = servers.find(s => s._id === server.id) ? "Joined" : "Join"
     const [state, setState] = useState(text)
 
-    const join = () => {
+    const join = async () => {
         if (text === "Joined" || state === "...") return
         setState("...")
-        fetch(`${link}servers/${code}`, { method: "POST", headers: { Authorization: me.token } })
+        await fetch(`${link}servers/${code}`, {
+            method: "POST",
+            headers: { Authorization:`Bearer ${me.token}` }
+        })
             .then((res) => res.json())
-            .then((server) => {
+            .then(() => {
                 setState("Joined")
-                onJoin(server)
             })
+        setState("Joined")
     }
 
     return (

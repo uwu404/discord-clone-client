@@ -1,0 +1,50 @@
+.invite-c1{
+    color: var(--font-primary);
+}
+.invite-c2.invite-c2{
+    background-color: var(--background-tertiary);
+    width: 100%;
+    margin-top: 0;
+    box-shadow: none;
+    border: none;
+    font-size: 15px;
+}
+.custom-invite-creator{
+    padding: 20px;
+    border: 1px var(--background-tertiary) solid;
+    border-radius: 5px;
+    background-color: var(--background-secondary);
+}
+.custom-invite p {
+    color: var(--font-primary);
+    font-size: 15px;
+}
+.custom-invite{
+    user-select: none;
+}
+.flex-ww7z{
+    display: flex;
+}
+.invite-s.invite-s{
+    margin: 0 0 0 auto;
+    color: var(--font-primary);
+}
+/* it was supposed to be purple but purple is hardly visible in dark theme so i made it blue */
+.purple-link.purple-link{
+    color: var(--blue)
+}
+.container-xxv4{
+    display: flex;
+    background-color: var(--background-tertiary);
+    overflow: hidden;
+    border-radius: 7px;
+    align-items: center;
+    margin-top: 5px;
+}
+.padding-1{
+    padding: 0;
+    padding-left: 10px;
+    color: var(--font-secondary);
+    font-weight: 400;
+    font-size: 15px;
+}

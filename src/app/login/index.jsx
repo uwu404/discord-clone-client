@@ -1,30 +1,43 @@
-import { useRef, useState, useContext } from "react"
+import { useRef, useState } from "react"
 import "./index.css"
-import Signup from "../signup"
-import { link } from "../../config.json"
-import Message from "../message"
-import { Update } from ".."
+import { useNavigate } from "react-router-dom"
+import endpoints from "../../global/endpoints"
 
-function Login() {
+const Login = () => {
     const [animation, expand] = useState("")
     const [error, setError] = useState("")
-    const update = useContext(Update)
-    const signUp = () => {
-        expand("expand-me")
-        setTimeout(() => update(<Signup update={update} />), 200)
-    }
+    const navigate = useNavigate()
+    const { endPoint, method } = endpoints.login()
     const password = useRef()
     const email = useRef()
+
+    const signUp = () => {
+        expand("expand-me")
+        setTimeout(() => navigate("/sign-up"), 200)
+    }
 
     const login = (e) => {
         e.preventDefault()
         if (!password.current.value || !email.current.value) return
         expand("waiting")
-        fetch(`${link}user?password=${password.current.value}&email=${email.current.value}`).then(res => res.json())
-            .then(user => {
-                if (user.error) return setError(user.error)
+        fetch(endPoint, {
+            method,
+            headers: { 
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                password: password.current.value,
+                email: email.current.value
+            })
+        })
+            .then(res => res.json())
+            .then(({ accessToken, error }) => {
+                if (error) {
+                    expand("")
+                    return setError(error)
+                }
                 expand("expand-all")
-                setTimeout(() => update(<Message user={user} update={update} />), 300)
+                setTimeout(() => navigate("/channels/@me", { state: { accessToken } }), 300)
             })
             .catch(err => {
                 expand("")
@@ -35,7 +48,7 @@ function Login() {
 
     return (
         <div className={`login ${animation}`}>
-            <h2 className="login-text">Login to continue</h2>
+            <h2 className="login-text">Login To Continue</h2>
             <form name="login">
                 <input id="email" ref={email} className="login-input email" required autoComplete="on" type="email" placeholder="Email" />
                 <input id="password" ref={password} autoComplete="on" required className="login-input password" type="password" placeholder="Password" />

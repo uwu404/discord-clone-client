@@ -6,7 +6,7 @@ const handleSocketEvents = {
         setMembers(members => {
             const list = [...members]
             const member = list.find(m => m._id === user.user)
-            if (member) member.online = user.online
+            if (member) member.status = user.status
             return list
         })
     },
@@ -42,6 +42,12 @@ const handleSocketEvents = {
     },
     messageDelete(setMessages, msg) {
         setMessages(prev => [...prev].filter(m => m._id !== msg._id))
+    },
+    memberJoin(setMembers, member) {
+        setMembers(prev => [...prev, member])
+    },
+    memberLeave(setMembers, member) {
+        setMembers(prev => prev.filter(m => m._id !== member._id))
     }
 }
 

@@ -1,7 +1,14 @@
 const Status = ({ status, size }) => {
-    const x = size < 60 ? 22 : (size < 100 ? 60 : 88)
-    const w = size < 60 ? 10 : (size < 100 ? 16 : 24)
-    const s = size < 60 ? 2.5 : (size < 100 ? 4 : 6)
+    const sizes = {
+        24: { x: 8, w: 10, s: 2.5 },
+        32: { x: 22, w: 10, s: 2.5 },
+        80: { x: 60, w: 16, s: 4 },
+        120: { x: 88, w: 24, s: 6 }
+    }
+    const x = sizes[size].x
+    const w = sizes[size].w
+    const s = sizes[size].s
+
     switch (status) {
         case "online": return (
             <rect
@@ -26,6 +33,8 @@ const Status = ({ status, size }) => {
         )
     }
 }
+
+export { Status }
 
 const Avatar = ({ src, status, className, size, ...props }) => {
     const name = size < 60 ? 32 : (size < 100 ? 80 : 120)

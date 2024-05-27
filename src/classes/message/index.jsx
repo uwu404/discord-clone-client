@@ -3,66 +3,51 @@ import "./index.css"
 import { link } from "../../config.json"
 
 const formatDate = (date) => {
-    const minutes = `${`${date.getHours()}`.padStart(2, '0')}:${`${date.getMinutes()}`.padStart(2, '0')}`
-    const now = new Date()
-    const ms = now.getHours() * 3600000 + now.getMinutes() * 60000 + now.getSeconds() * 1000 + now.getMilliseconds()
-    const day = 8.64e+7
-    if (Date.now() - date.getTime() <= ms) return `Today at ${minutes}`
-    if (Date.now() - date.getTime() <= (ms + day)) return `Yesterday at ${minutes}`
-    return date.toLocaleDateString()
+    try {
+        const formatter = new Intl.DateTimeFormat(undefined, { hour: "2-digit", minute: "2-digit" })
+        const time = formatter.format(date)
+        const now = new Date()
+        const ms = now.getHours() * 3600000 + now.getMinutes() * 60000 + now.getSeconds() * 1000 + now.getMilliseconds()
+        const day = 8.64e+7
+        if (Date.now() - date.getTime() <= ms) return `Today at ${time}`
+        if (Date.now() - date.getTime() <= (ms + day)) return `Yesterday at ${time}`
+        return date.toLocaleDateString()
+    } catch {
+        return "idk when"
+    }
 }
 
 class Message {
-    constructor(message, me, onJoin, server) {
+    constructor(message) {
         this.author = new User(message.author)
         this.content = message.content
-        this.attachment = message.attachment
-        this.timestamp = new Date(message.createdAt)
+        this.attachments = message.attachments
         this.createdAt = formatDate(new Date(message.createdAt))
         this.id = message._id
         this.invite = message.invite
         this.unsent = message.unsent
-        this.server = server
         this.channel = message.channel
-        this.Authorization = me?.token
-        this.me = me
-        this.setMessages = message.setMessages
-        this.onJoin = onJoin
         this.failed = message.failed
         this.updatedAt = message.updatedAt
+        this.edited = message.updatedAt !== message.createdAt
+        this.timestamp = new Date(message.createdAt)
     }
-    get calculateImage() {
-        if (this.attachment.height < 300 && this.attachment.width < 400) return {
-            height: this.attachment.height,
-            width: this.attachment.width
-        }
-        if (this.attachment.height >= this.attachment.width) {
-            return { height: 300, width: this.attachment.width / this.attachment.height * 300 }
-        }
-        if (this.attachment.height / this.attachment.width * 400 > 300) return { height: 300, width: this.attachment.width / this.attachment.height * 300 }
-        return { width: 400, height: this.attachment.height / this.attachment.width * 400 }
-    }
-    get displayAttachmentURL() {
-        const query = this.calculateImage.height !== this.attachment.height && this.calculateImage.width !== this.attachment.width ?
-            `?width=${Math.trunc(this.calculateImage.width)}&height=${Math.trunc(this.calculateImage.height)}` : ""
-        return link + this.attachment.URL + query
-    }
-    async delete() {
+    async delete(token) {
         const message = await fetch(`${link}channels/${this.channel}/messages/${this.id}`, {
             method: "DELETE",
             headers: {
-                Authorization: this.Authorization
+                Authorization: `Bearer ${token}`
             }
         })
             .then(res => res.json())
         return message
     }
-    async edit(content) {
+    async edit(content, token) {
         const message = await fetch(`${link}channels/${this.channel}/messages/${this.id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: this.Authorization
+                Authorization: `Bearer ${token}`
             },
             body: JSON.stringify({ content })
         })

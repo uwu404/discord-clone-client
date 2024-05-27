@@ -6,11 +6,8 @@
     z-index: 2;
     user-select: none;
     overflow: hidden;
-    inset: 0;
-    position: fixed;
     color: var(--font-primary);
-    pointer-events: all;
-    margin: auto;
+    position: relative;
 }
 .part-1.part-1 svg{
     stroke: var(--background-primary);
@@ -152,29 +149,16 @@
     border: none;
     color: var(--font-secondary);
 }
-.edit-server{
-    inset: 0;
-    width: 400px;
-    height: fit-content;
-    background-color: var(--background-primary);
-    margin: auto;
-    border-radius: 7px;
-    position: fixed;
-    display: flex;
-}
 .server-edit-icon{
     width: fit-content;
-}
-.server-edit-icon img{
-    border-radius: 50%;
-    margin: 20px 0 10px 20px;
-    object-fit: cover;
-    -webkit-user-drag: none;
+    display: flex;
+    flex: 1;
+    min-width: 0;
 }
 .change-server-name{
     width: 100%;
     box-sizing: border-box;
-    padding: 5px;
+    padding: 0.6em;
     border: 1px var(--shadow) solid;
     outline: none;
     font-size: 15px;
@@ -188,29 +172,15 @@
 .server-info input:hover{
     border-color: black;
 }
-.server-info button{
-    inset: auto;
-    position: relative;
-    width: 70px;
-    box-sizing: border-box;
-    font-size: 15px;
-    padding: 4px;
-    background-color: transparent;
-    border: 1px var(--font-primary) solid;
-    border-radius: 3px;
-    color: var(--font-primary);
-    margin-right: 10px;
-    font-weight: 500;
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
 .server-info{
     position: relative;
+    flex: 1;
+    min-width: 0;
 }
 .server-info label{
     color: var(--font-secondary);
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 13px;
+    font-weight: 600;
 }
 .server-info h3{
     color: var(--font-primary);
@@ -221,9 +191,63 @@
     visibility: hidden;
 }
 .upload-button{
-    text-decoration: underline;
-    color: var(--cyan);
+    inset: auto;
+    position: relative;
+    box-sizing: border-box;
+    font-size: 13px;
+    padding: 0.7em 1.4em;
+    background-color: transparent;
+    border: 1px var(--background-hover) solid;
+    border-radius: 3px;
+    color: var(--font-primary);
+    margin-right: 10px;
+    font-weight: 500;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    display: block;
+    width: max-content;
     cursor: pointer;
-    font-size: 15px;
-    margin-left: 20px;
+    user-select: none;
+}
+.upload-button:hover{
+    background-color: var(--background-hover);
+}
+.section-420{
+    display: flex;
+    padding-bottom: 20px;
+}
+.server-icon-img{
+    border-radius: 50%;
+    margin-bottom: 5px;
+    object-fit: cover;
+    -webkit-user-drag: none;
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+    box-shadow: 0 4px 4px 2px rgba(0, 0, 0, 0.123);
+    text-align: center;
+    line-height: 100px;
+    font-size: 35px;
+}
+.recommendation{
+    font-size: 14px;
+    color: var(--font-secondary);
+    user-select: none;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+.block-nomargin{
+    padding-right: 20px;
+    padding-left: 10px;
+    min-width: 0;
+}
+.lorem{
+    text-align: center;
+    padding-right: 10px;
+}
+.ipsum{
+    font-size: 14px;
+    color: var(--font-secondary);
+    font-weight: 500;
+    user-select: none;
 }

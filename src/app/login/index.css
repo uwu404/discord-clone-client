@@ -12,7 +12,7 @@
     text-align: center;
 }
 .button-login{
-    background: var(--purple);
+    background: var(--blue);
     border-radius: 3px;
     font-size: 17px;
     color: white;
@@ -25,10 +25,13 @@
     transition: 0.2s;
 }
 .button-login:hover{
-    background-color: var(--purple-hover);
+    background-color: var(--blue-hover);
+}
+.no-account{
+    color: var(--font-secondary)
 }
 .no-account span{
-    color: var(--blue);
+    color: var(--cyan);
     cursor: pointer;
 }
 .no-account span:hover{
@@ -43,8 +46,22 @@
     font-size: 16px;
     border-radius: 5px;
     margin-bottom: 5px;
-    background-color: var(--font-background);
+    background-color: var(--background-secondary);
     padding: 0 25px;
+    color: var(--font-primary);
+}
+.login-input:-webkit-autofill,
+.login-input:-webkit-autofill:hover,
+.login-input:-webkit-autofill:active,
+.login-input:-webkit-autofill:focus{
+    background-clip: text;
+    -webkit-text-fill-color: var(--font-primary);
+    transition: background-color 5000s ease-in-out 0s;
+    box-shadow: inset 0 0 100px 20px var(--background-secondary);
+    caret-color: var(--font-primary);
+}
+.login-input::placeholder{
+    color: var(--font-secondary);
 }
 .password{
     top: 50%;
@@ -58,6 +75,7 @@
     font-size: 30px;
     margin-top: 40px;
     margin-bottom: 40px;
+    color: var(--font-primary);
 }
 
 .expand-me{

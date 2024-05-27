@@ -1,5 +1,6 @@
-import { socket } from "./app/message"
+import { useContext, useEffect, useState } from "react"
 import handleSocketEvents from "./app/message/handleSocketEvents"
+import { UserContext } from "./app/message/index"
 
 const userCache = new Map()
 
@@ -9,6 +10,7 @@ const cacheUserFromMessages = (messages) => {
     }
 }
 
+// this will not only cache http requests but also get users from it
 const cacheUserFromMembers = (members) => {
     for (const member of members) {
         if (!userCache.has(member._id)) userCache.set(member._id, member)
@@ -20,6 +22,37 @@ const cacheUser = (items, type) => {
     if (type === "serverMembers" || type === "logs") cacheUserFromMembers(items)
 }
 
+const useCache = (userId) => {
+    const { socket } = useContext(UserContext)
+    const [user, setUser] = useState(userCache.get(userId))
+
+    useEffect(() => {
+        if (!user) return
+
+        const handleStatusChange = u => {
+            if (u.user !== userId) return
+            setUser(prev => ({ ...prev, status: u.status }))
+        }
+
+        const handleMemberUpdate = u => {
+            if (u._id !== userId) return
+            setUser(prev => ({ ...prev, u }))
+        }
+
+        socket.on("statusChange", handleStatusChange)
+        socket.on("memberUpdate", handleMemberUpdate)
+
+        return () => {
+            socket.off("statusChange", handleStatusChange)
+        }
+    }, [socket, user, userId])
+
+    return user
+}
+
+export { useCache }
+
+// making this a custom hook that uses state will make the app render way too many times
 const PreviousQueries = {
     channels: {},
     serverMembers: {},
@@ -46,47 +79,42 @@ const PreviousQueries = {
             this[type][key] = fct
         }
     },
-    init() {
+    init(socket) {
+        // update http requests through websocket
         const messageEvent = msg => {
             const setMessages = PreviousQueries.at("channels", msg.channel)
             handleSocketEvents.message(setMessages, msg)
         }
         const messageDeleteEvent = msg => {
-            const channels = Object.keys(this.channels)
-            const channel = channels.find(ch => {
-                return this.channels[ch].some(m => m._id === msg._id)
-            })
-            if (channel) {
-                const setMessages = PreviousQueries.at("channels", channel)
-                handleSocketEvents.messageDelete(setMessages, msg)
-            }
+            const setMessages = PreviousQueries.at("channels", msg.channel)
+            setMessages(prev => prev.filter(m => m._id !== msg._id))
         }
         const messageEditEvent = msg => {
-            const editMessage = (id) => {
-                const setMessages = PreviousQueries.at("channels", id)
-                handleSocketEvents.messageEdit(setMessages, msg)
-            }
-            const channels = Object.keys(this.channels)
-            const channel = channels.find(ch => {
-                return this.channels[ch].some(m => m._id === msg._id)
-            })
-            if (channel) editMessage(channel)
+            const setMessages = PreviousQueries.at("channels", msg.channel)
+            handleSocketEvents.messageEdit(setMessages, msg)
         }
         const DMEvent = msg => {
-            const dms = Object.keys(this.channels)
-            const user = msg.dmFor.find(name => dms.includes(name))
-            const setMessages = PreviousQueries.at("channels", user)
-            handleSocketEvents.message(setMessages, msg)
+            const setMessages = PreviousQueries.at("channels", msg.channel)
+            setMessages(prev => [...prev, msg])
         }
         const memberUpdateEvent = member => {
             if (!userCache.has(member._id)) return
             const user = userCache.get(member._id)
             userCache.set(member._id, Object.assign(user, member))
         }
-        const onlineEvent = member => {
+        const statusEvent = member => {
             if (!userCache.has(member.user)) return
             const user = userCache.get(member.user)
-            user.online = member.online
+            user.status = member.status
+        }
+        const memberJoin = (server, member) => {
+            if (!this.serverMembers[server._id]) return
+            this.serverMembers[server._id].push(member)
+        }
+        const memberLeave = (server, member) => {
+            if (!this.serverMembers[server._id]) return
+            const indexOfMember = this.serverMembers[server._id].findIndex(m => m._id === member._id)
+            this.serverMembers[server._id].splice(indexOfMember, 1)
         }
         const clear = () => this.clear()
         socket.on("message", messageEvent)
@@ -94,7 +122,9 @@ const PreviousQueries = {
         socket.on("dm", DMEvent)
         socket.on("messageEdit", messageEditEvent)
         socket.on("memberUpdate", memberUpdateEvent)
-        socket.on("online", onlineEvent)
+        socket.on("statusChange", statusEvent)
+        socket.on("memberJoin", memberJoin)
+        socket.on("memberLeave", memberLeave)
         socket.on("disconnect", clear)
         return () => {
             socket.off("message", messageEvent)
@@ -102,8 +132,10 @@ const PreviousQueries = {
                 .off("dm", DMEvent)
                 .off("messageEdit", messageEditEvent)
                 .off("memberUpdate", memberUpdateEvent)
-                .off("online", onlineEvent)
+                .off("online", statusEvent)
                 .off("disconnect", clear)
+                .off("memberJoin", memberJoin)
+                .off("memberLeave", memberLeave)
         }
     },
     clear() {

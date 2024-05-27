@@ -1,0 +1,28 @@
+.connected-user{
+    display: flex;
+    border-radius: 3px;
+    margin: 0 5px 0 30px;
+    align-items: center;
+    padding: 5px;
+    -webkit-user-drag: none;
+    cursor: pointer;
+}
+.connected-user:is(:hover, .clicked){
+    background-color: var(--background-secondary-hover);
+}
+.wrapperx-51{
+    height: 20px;
+    padding-right: 7px;
+}
+.connected-user-pfp{
+    border-radius: 50%;
+}
+.connected-user-username{
+    color: var(--font-secondary);
+    font-size: 15px;
+    font-weight: 500;
+    user-select: none;
+}
+.connected-user:is(:hover, .clicked) .connected-user-username{
+    color: var(--font-primary);
+}

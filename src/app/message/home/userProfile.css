@@ -1,0 +1,20 @@
+.dm-profile{
+    display: flex;
+    flex-direction: column;
+    padding: 0 15px;
+    background-color: var(--background-xx);
+    padding-bottom: 20px;
+}
+.dm-profile-avatar.dm-profile-avatar{
+    margin-top: -50px;
+    cursor: default;
+}
+.user-profile-2{
+    height: 100%;
+    background-color: var(--background-xx);
+    min-height: fit-content;
+}
+.mini-user-bg.mini-user-bg{
+    height: 125px;
+    min-height: 125px;
+}

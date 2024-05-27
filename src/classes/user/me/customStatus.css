@@ -1,0 +1,22 @@
+.custom-status{
+    display: flex;
+    flex-direction: column;
+    width: 450px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.set-custom-status{
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px 20px 20px;
+}
+.h2-82{
+    align-self: center;
+    color: var(--font-primary);
+    user-select: none;
+}
+.current-status{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

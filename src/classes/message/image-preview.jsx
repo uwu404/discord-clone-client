@@ -1,4 +1,4 @@
-// This file is no longer used 
+// old discord attachment component (not used in the app)
 
 import { useState } from "react"
 import Utils from "../../utils"

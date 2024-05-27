@@ -24,15 +24,16 @@
 .message-div.clicked .message-params{
     visibility: visible;
 }
-.outer-div ~ .screen .message-div:not(.clicked):hover{
+.lowkey ~ .screen .message-div:not(.clicked):hover{
     background-color: transparent;
 }
-.outer-div ~ .screen .message-div:not(.clicked) .message-params{
+.lowkey ~ .screen .message-div:not(.clicked) .message-params{
     display: none;
 }
 .new-day{
     display: flex;
     margin: 5px 20px;
+    margin-top: 10px;
     font-size: 13px;
     user-select: none;
 }
@@ -43,7 +44,7 @@
 }
 .new-day div{
     height: 1px;
-    background-color: var(--font-background);
+    background-color: var(--seperator);
     flex-grow: 1;
     margin: auto 0;
 }

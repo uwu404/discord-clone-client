@@ -1,0 +1,23 @@
+.sub{
+    text-align: left;
+}
+.that-label{
+    display: block;
+    color: rgb(81, 87, 92);
+    font-size: 13px;
+    font-weight: 600;
+}
+.invite-link{
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 5px;
+    border: none;
+    background-color: rgb(216, 222, 228);
+    padding: 11px 10px;
+    outline: none;
+    font-size: 15px;
+}
+.invite-sample{
+    font-size: 14px;
+    color: rgb(48, 49, 51);
+}

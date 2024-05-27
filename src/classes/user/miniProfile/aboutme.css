@@ -1,0 +1,20 @@
+.about-her{
+    color: var(--font-primary);
+    margin: 0 0 5px 0;
+    font-weight: 900;
+    user-select: none;
+}
+.about-you{
+    color: var(--font-normal);
+    font-size: 14px;
+    user-select:text;
+    max-width: 100%;
+    word-break: break-all;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+.about-him{
+    user-select: none;
+    padding-bottom: 1px;
+}

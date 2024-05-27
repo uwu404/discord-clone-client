@@ -1,0 +1,153 @@
+.view-profile{
+    width: 600px;
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-height: 241px;
+    flex-grow: 1;
+    max-height: 600px;
+    position: relative;
+}
+.profile-wrapper{
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: visible;
+    background-color: var(--background-xx);
+}
+.pfp-wrapper{
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 8px var(--background-xx) solid;
+    margin-top: -80px;
+    position: relative;
+}
+.pfp-2{
+    border-radius: 50%;
+    -webkit-user-drag: none;
+}
+.user-bg{
+    width: 100%;
+    height: 140px;
+    min-height: 140px;
+}
+.uwu-20{
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: var(--font-primary);
+}
+.uwu-20 span{
+    color: var(--font-secondary);
+}
+.more{
+    display: flex;
+    color: var(--font-primary);
+    font-size: 13px;
+    user-select: none;
+    border-bottom: 1px solid var(--seperator);
+}
+.more-div{
+    margin-right: 20px;
+    padding-bottom: 15px;
+    border-bottom: 3px transparent solid;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--font-secondary);
+}
+.more-div:hover{
+    border-color: var(--font-primary);
+}
+.more-div.clicked{
+    border-color: var(--font-primary);
+    color: var(--font-primary);
+    cursor: default;
+}
+.more-with-border{
+    width: 100%;
+}
+.profile{
+    flex-grow: 1;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: 10px;
+}
+.profile-body{
+    background-color: var(--background-floating);
+    border-radius: 10px;
+    padding: 10px 12px 0 12px;
+    display: flex;
+    min-height: 0;
+    height: 100%;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+.flex-zone{
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 15px;
+}
+.send-req{
+    border: none;
+    padding: 0.6em 1em;
+    font-size: 15px;
+    font-weight: 500;
+    color: white;
+    border-radius: 3px;
+    background-color: var(--green);
+    transition: 0.2s;
+    height: fit-content;
+}
+.send-req:hover{
+    background-color: var(--green-hover);
+}
+.profile-status{
+    transform: scale(1.3);
+    transform-origin: bottom right;
+}
+.server-ico.friend-pfp{
+    margin-left: 3px;
+}
+.server-ico.server-ico{
+    border-radius: 10px;
+}
+.mutual-server.friend:first-child{
+    margin-top: 10px;
+}
+.mutual-server.friend:last-child{
+    margin-bottom: 10px;
+}
+.mutual-server.mutual-server{
+    margin-left: 0;
+    height: 46px;
+    margin: 2px 0;
+    border: none;
+    gap: 10px;
+}
+.profile-server-list.profile-server-list{
+    margin: 0;
+    scrollbar-color: var(--background-floating);
+    scrollbar-width: none;
+    overflow-y: scroll;
+    min-height: 0;
+    height: 100%;
+}
+.profile-server-list::-webkit-scrollbar{
+    display: none;
+}
+.even-more{
+    overflow: hidden;
+    min-height: 0;
+    flex-grow: 1;
+}
+.flex-bn{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 10px;
+}

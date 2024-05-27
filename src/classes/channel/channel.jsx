@@ -1,12 +1,12 @@
-import Hashtag from "../../icons/hashtag";
+import TextChannel from "./textChannel"
+import VoiceChannel from "./voiceChannel"
 
-const ChannelJSX = ({ isClicked, onClick, channel }) => {
-    return (
-        <div onClick={onClick} className={`channel ${isClicked ? "c-clicked" : ""}`}>
-            <Hashtag size={25} />
-            <span>{channel.name}</span>
-        </div>
-    )
+const ChannelJSX = ({ channel }) => {
+    switch (channel.type) {
+        case "text": return <TextChannel channel={channel} />
+        case "voice": return <VoiceChannel channel={channel} />
+        default: return <TextChannel channel={channel} />
+    }
 }
 
 export default ChannelJSX

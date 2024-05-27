@@ -1,25 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import "./imageCropper.css"
+import CustomRangeInput from "./customRangeInput"
 
 const ImageCropper = ({ src, onChange }) => {
     const canvasRef = useRef()
     const rangeRef = useRef()
-    const lastPoint = { x: 0, y: 0 }
+    const lastPoint = useMemo(() => ({ x: 0, y: 0 }), [])
     const [size, setSize] = useState([0, 0, 1])
-    const speed = 0.7
     const canvasSize = useMemo(() => ({ width: 568, height: 361 }), [])
     let coordinates = useMemo(() => [0, 0], [])
-    let isDragging = false
-    const calculator = () => ((rangeRef.current.value / 100) + 10) * size[2] * speed
-    const hoverListener = (e) => {
-        if (!isDragging) return
-        if (e.clientX > lastPoint.x) coordinates[0] += calculator()
-        if (e.clientX < lastPoint.x) coordinates[0] -= calculator()
-        if (e.clientY > lastPoint.y) coordinates[1] += calculator()
-        if (e.clientY < lastPoint.y) coordinates[1] -= calculator()
-        lastPoint.y = e.clientY
-        lastPoint.x = e.clientX
-    }
+    let isDragging = useRef(false)
+    const speed = 0.1
+
     useEffect(() => {
         let isMounted = true
         const img = new Image()
@@ -58,16 +50,43 @@ const ImageCropper = ({ src, onChange }) => {
         return () => isMounted = false
     }, [src, coordinates, onChange, canvasSize])
 
-    const handleMouseDown = () => isDragging = true
-    const handleMouseUp = () => isDragging = false
+    const handleMouseDown = e => {
+        lastPoint.x = e.clientX
+        lastPoint.y = e.clientY
+        isDragging.current = true
+    }
+
+    useEffect(() => {
+        const handleMouseUp = () => isDragging.current = false
+
+        const hoverListener = (e) => {
+            if (!isDragging.current) return
+            const XMovement = (e.clientX - lastPoint.x) * ((rangeRef.current.value / 100) + 10) * size[2] * speed
+            const YMovement = (e.clientY - lastPoint.y) * ((rangeRef.current.value / 100) + 10) * size[2] * speed
+            coordinates[0] += XMovement
+            coordinates[1] += YMovement
+            lastPoint.y = e.clientY
+            lastPoint.x = e.clientX
+        }
+
+        document.addEventListener("mouseup", handleMouseUp)
+        document.addEventListener("mouseleave", handleMouseUp)
+        document.addEventListener("mousemove", hoverListener)
+
+        return () => {
+            document.removeEventListener("mouseup", handleMouseUp)
+            document.removeEventListener("mouseleave", handleMouseUp)
+            document.removeEventListener("mousemove", hoverListener)
+        }
+    }, [coordinates, lastPoint, size])
 
     return (
         <>
             <div className="cropper">
-                <canvas style={{ background: "black", ...canvasSize }} onMouseOut={handleMouseUp} onMouseUp={handleMouseUp} onMouseDown={handleMouseDown} onMouseMove={hoverListener} ref={canvasRef}></canvas>
+                <canvas style={{ background: "black", ...canvasSize }} onMouseDown={handleMouseDown} ref={canvasRef}></canvas>
                 <div style={{ width: Math.min(size[0], size[1]), height: Math.min(size[0], size[1]) }} className="circle-border"></div>
             </div>
-            <input className="zoom-range" defaultValue={100} ref={rangeRef} max={200} min={100} type="range" />
+            <CustomRangeInput className="zoom-range" defaultValue={100} ref={rangeRef} max={200} min={100} type="range" />
         </>
     )
 }

@@ -2,63 +2,10 @@
     transform: translate(4px, 2px);
     position: absolute;
 }
-.my-pfp.my-pfp{
-    transition: 0.2s;
-    cursor: pointer;
-    pointer-events: all;
-}
-.my-pfp:hover{
-    filter: brightness(0.7);
-}
-.icon-div{
-    width: 32px;
-    height: 32px;
-    position: relative;
-    bottom: 1px;
-}
-.icon-status.status{
-    box-shadow: 0 0 0 5px var(--background-xx);
-    inset: auto 0 0 auto;
-    transform: scale(0.55);
-    transform-origin: right bottom;
-}
-.my-username{
-    user-select: none;
-    font-size: 14px;
-    font-weight: 600;
-    margin: auto 0 auto 8px;
-    color: var(--font-primary);
-}
-.my-username span{
-    display: block;
-    font-weight: 400;
-    color: var(--font-secondary);
-    font-size: 12px;
-}
-.settings-button{
-    color: var(--icon-normal);
-    width: 32px;
-    transition: 0.2s;
-    height: 32px;
-    cursor: pointer;
-    justify-self: right;
-    margin: 0 9px 0 auto;
-    position: relative;
-    border-radius: 5px;
-}
-.settings-button svg{
-    margin: auto;
-    position: absolute;
-    inset: 0;
-}
-.settings-button:hover{
-    background-color: var(--background-hover);
-}
-
 @keyframes shift {
     from {
-        opacity: 0.6;
-        transform: translateX(20px);
+        opacity: 0.7;
+        transform: translateX(15px);
     } to {
         opacity: 1;
         transform: translateX(0);
@@ -66,8 +13,8 @@
 }
 @keyframes reverseShift {
     from {
-        opacity: 0.6;
-        transform: translateX(-20px);
+        opacity: 0.7;
+        transform: translateX(-15px);
     } to {
         opacity: 1;
         transform: translateX(0);
@@ -76,11 +23,11 @@
 .user-div{
     position: fixed;
     z-index: 2;
-    animation: shift 0.2s ease-out;
-    background: var(--background-floating);
+    animation: shift 0.15s ease-out;
+    background: var(--background-xx);
     box-shadow: 0 0 9px 4px rgba(0, 0, 0, 0.100);
-    border-radius: 7px;
-    width: 300px;
+    border-radius: 10px;
+    width: 340px;
     padding-bottom: 7px;
     overflow: hidden;
     padding: 15px;
@@ -88,23 +35,10 @@
     display: flex;
     flex-direction: column;
 }
-.status{
-    content: "";
-    position: absolute;
-    background-color: var(--green-hover);
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    box-shadow: 0 0 0 5px var(--background-floating);
-    right: 4%;
-    bottom: 4%;
-}
-.view-profile.not-online .status,
-.user-div.not-online .status{
-    background-color: var(--background-secondary);
-    width: 10px;
-    height: 10px;
-    border: 4px var(--font-secondary) solid;
+.profile-body.mini-profile-body{
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
 }
 .user-bg-1{
     width: 100%;
@@ -112,21 +46,20 @@
     position: absolute;
     top: 0; left: 0;
 }
-.user-username span{
-    color: var(--font-secondary);
-}
 .avatar-wrapper{
     width: 80px;
     height: 80px;
-    border: 6px var(--background-floating) solid;
+    border: 6px var(--background-xx) solid;
     margin-top: 5px;
     border-radius: 50px;
-    background-color: var(--background-floating);
+    background-color: var(--background-xx);
     cursor: pointer;
     position: relative;
+    margin-bottom: 10px;
 }
 .change-929{
     pointer-events: none;
+    user-select: none;
     color: white;
     font-size: 11px;
     display: flex;
@@ -137,7 +70,10 @@
     border-radius: 50%;
     width: 80px; height: 80px;
     opacity: 0;
+    transition: 0.1s;
     background-color: rgba(0, 0, 0, 0.507);
+    z-index: -1;
+    position: relative;
 }
 .avatar-wrapper:hover .change-929{
     opacity: 1;
@@ -150,142 +86,10 @@
     top: 0;
     left: 0;
 }
-.user-avatar{
-    border-radius: 50%;
-    margin: 0;
-    -webkit-user-drag: none;
-    cursor: pointer;
-    object-fit: cover;
-}
-.user-username{
-    font-size: 19px;
-    color: var(--font-primary);
-    margin-top: 5px;
-    margin-bottom: 10px;
-}
-.line{
-    background-color: var(--background-primary);
-    height: 1px;
-}
-.line.first{
-    position: relative;
-    width: 100%;
-    margin: auto;
-}
-.line.last{
-    position: absolute;
-    left: 0;
-    width: 100%;
-}
-.note,
-.roles{
-    width: 100%;
-    user-select: none;
-    position: relative;
-    margin-top: 10px;
-}
-.roles:last-child .line{
-    display: none;
-}
-.user-custom-status{
-    color: var(--icon-normal);
-    font-size: 14px;
-    display: inline-block;
-    margin-bottom: 10px;
-}
-.customizing-my-profile h5,
-.roles h5{
-    position: relative;
-    margin-top: 0;
-    color: var(--font-secondary);
-    font-size: 13px;
-}
-.note h5{
-    margin-top: 0;
-    margin-bottom: 5px;
-    font-size: 13px;
-    color: var(--font-secondary);
-}
-.note textarea{
-    width: 100%;
-    height: 38px;
-    font-size: 13px;
-    resize: none;
-    box-sizing: border-box;
-    outline: none;
-    border-radius: 3px;
-    color: var(--font-primary);
-    border: none;
-    background-color: inherit;
-    transition: 0.2s;
-}
-.note textarea:focus{
-    background-color: var(--background-hover);
-}
-.role{
-    border-color: var(--green);
-    width: fit-content;
-    max-width: calc(100% - 28px);
-    overflow: hidden;
-    color: var(--font-primary);
-    padding: 4px 7px;
-    position: relative;
-    font-size: 12px;
-    font-weight: 500;
-    background-color: var(--font-background);
-    bottom: 10px;
-    padding-left: 21px;
-    margin-right: 5px;
-    display: inline-block;
-    border-radius: 3px;
-}
-.role::before{
-    content: "";
-    width: 0;
-    height: 0;
-    top: 5px;
-    position: absolute;
-    left: 4px;
-    display: block;
-    border-radius: 50%;
-    border: 6px solid;
-    border-color: inherit;
-}
-.dm-user{
-    background-color: var(--background-primary);
-    border-radius: 3px;
-    outline: none;
-    border: none;
-    height: 40px;
-    margin: auto;
-    box-sizing: border-box;
-    width: 100%;
-    padding: 0px 13px;
-    font-size: 15px;
-    color: var(--font-primary);
-    margin-top: 10px;
-    transition: 0.4s;
-}
-.dm-user:focus{
-    box-shadow: 0 0 0 1px var(--cyan);
-}
 .user-id{
     color: var(--font-secondary);
     font-size: 14px;
     user-select: none;
-}
-.user-settings{
-    z-index: 6;
-    width: 600px;
-    background-color: var(--background-primary);
-    height: 400px;
-    top: 0; left: 0;
-    bottom: 0; right: 0;
-    border-radius: 8px;
-    margin: auto;
-    position: fixed;
-    display: flex;
-    overflow: hidden;
 }
 .user-avatar-selector{
     width: 150px;
@@ -365,22 +169,6 @@
 .overview h3:empty::before{
     content: attr(placeholder);
     color: var(--red);
-}
-.logout{
-    border: none;
-    background-color: var(--red);
-    outline: none;
-    border-radius: 4px;
-    width: 160px;
-    height: 35px;
-    color: white;
-    font-weight: 600;
-    position: absolute;
-    bottom: 18px;
-    transition: 0.4s;
-}
-.logout:hover{
-    background-color: var(--red-hover);
 }
 .view-password:hover{
     cursor: pointer;
@@ -506,12 +294,15 @@
     user-select: none;
     display: flex;
     cursor: pointer;
-    width: 228px;
+    width: 100%;
     border-radius: 3px;
     position: relative;
     align-items: center;
-    margin-left: 6px;
+    box-sizing: border-box;
     height: 42px;
+    padding-left: 8px;
+    gap: 10px;
+    margin-bottom: 2px;
 }
 .member-skeleton{
     cursor: default;
@@ -538,11 +329,16 @@
 .member:hover .member-is-online, .member-clicked .member-is-online{
     box-shadow: 0 0 0 3px var(--background-secondary-hover);
 }
-.member:hover, .member-clicked{
+.member:hover{
     background-color: var(--background-secondary-hover);
     opacity: 1;
 }
-.member-clicked{
+.member-clicked.member-clicked{
+    background-color: var(--background-hover);
+    opacity: 1;
+
+}
+.member-clicked:not(.log){
     pointer-events: none;
 }
 .member-skeleton-pfp,
@@ -553,7 +349,6 @@
 .member-avatar{
     width: 32px;
     height: 32px;
-    margin-left: 8px;
     position: relative;
 }
 .member-skeleton-pfp{
@@ -563,7 +358,6 @@
 }
 .nice-div{
     height: fit-content;
-    margin-left: 11px;
 }
 .member-name{
     color: var(--font-primary);
@@ -602,7 +396,7 @@
     margin-top: 20px;
     margin-bottom: 2px;
     position: relative;
-    left: 12px;
+    left: 6px;
     user-select: none;
     font-size: 12px;
     font-weight: 600;
@@ -640,27 +434,4 @@
 }
 .dark-theme.dark{
     border-color: var(--blue);
-}
-.footer{
-    height: 52px;
-    background-color: var(--background-xx);
-    position: relative;
-    box-sizing: border-box;
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    padding-left: 8px;
-    padding-bottom: 1px;
-}
-.generic-label{
-    color: var(--font-secondary);
-    font-size: 13px;
-    font-weight: 600;
-}
-.user-av{
-    pointer-events: none;
-}
-.user-av img{
-    object-fit: cover;
-    -webkit-user-drag: none;
 }

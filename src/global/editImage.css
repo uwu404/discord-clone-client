@@ -1,8 +1,5 @@
 .edit-image {
     background-color: var(--background-primary);
-    position: fixed;
-    inset: 0;
-    margin: auto;
     width: 600px;
     height: fit-content;
     z-index: 7;
@@ -11,6 +8,7 @@
     align-items: center;
     flex-direction: column;
     overflow: hidden;
+    user-select: none;
 }
 .edit-image h2 {
     align-self: flex-start;

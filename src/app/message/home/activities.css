@@ -1,0 +1,27 @@
+.activities{
+    padding: 25px 20px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-left: 1px var(--seperator) solid;
+}
+.active-now{
+    align-self: flex-start;
+}
+.active-now-header{
+    color: var(--font-primary);
+    font-size: 20px;
+    margin: 0;
+    user-select: none;
+    margin-bottom: 30px;
+    font-weight: 900;
+}
+.construction{
+    width: 240px;
+    height: 300px;
+    background-size: 240px 300px;
+    background-repeat: no-repeat;
+}

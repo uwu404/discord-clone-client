@@ -1,0 +1,12 @@
+.c-logout{
+    width: 400px;
+    background-color: var(--background-primary);
+    border-radius: 5px;
+    height: fit-content;
+    overflow: hidden;
+    color: var(--font-primary);
+}
+.and-logout.and-logout{
+    margin-bottom: 15px;
+    font-size: 15px;
+}

@@ -1,0 +1,14 @@
+.server-menu{
+    background-color: var(--background-base);
+    position: fixed;
+    top: 60px;
+    left: 80px;
+    z-index: 3;
+    width: 225px;
+    border-radius: 5px;
+    color: var(--font-primary);
+    box-sizing: border-box;
+    padding: 5px;
+    animation: taller 0.1s forwards;
+    transform-origin: center top;
+}

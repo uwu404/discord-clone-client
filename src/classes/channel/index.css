@@ -1,8 +1,10 @@
+.channel-item{
+    position: relative;
+}
 .channel{
-    height: 35px;
+    height: 32px;
     border-radius: 3px;
-    width: 230px;
-    margin-left: 5px;
+    width: 100%;
     cursor: pointer;
     transition: 0.2s;
     display: flex;
@@ -13,10 +15,12 @@
     padding-left: 5px;
     color: var(--font-primary);
     font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 2px;
 }
 .channel svg{
     fill: var(--font-secondary);
-    margin-right: 3px;
+    margin-right: 6px;
 }
 .channel:hover:not(.c-clicked){
     background-color: var(--background-secondary-hover);
@@ -28,30 +32,61 @@
     font-weight: 500;
     color: var(--font-primary);
     user-select: none;
-    margin-left: 4px;
-    font-size: 17px;
+    font-size: 16px;
 }
 .channel-title svg{
     fill: var(--font-secondary);
-    margin-left: 12px;
 }
 .channel-title{
     position: relative;
     display: flex;
     align-items: center;
     justify-items: center;
+    gap: 6px;
+}
+.roblox{
+    padding: 15px;
+    user-select: none;
+}
+.create-channel{
+    border-radius: 12px;
+    width: 460px;
+    overflow: hidden;
+    background-color: var(--background-primary);
+    color: var(--font-primary);
+    position: relative;
+}
+.title-channel{
+    font-size: 21px;
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 20px;
 }
 .check{
     display: flex;
     height: 60px;
     padding: 10px;
     margin-bottom: 10px;
-    --color: var(--background-tertiary);
+    --color: var(--background-secondary);
     border-radius: 3px;
     background-color: var(--color);
     align-items: center;
     box-sizing: border-box;
     width: 100%;
+    user-select: none;
+    cursor: pointer;
+    gap: 8px;
+    padding-right: 20px;
+}
+.check:hover{
+    background-color: var(--background-secondary-hover);
+}
+.check.checked{
+    background-color: var(--background-hover);
+}
+.my-fav-dog{
+    display: flex;
+    flex-direction: column;
 }
 .channel-type h4{
     margin: 0;
@@ -59,44 +94,31 @@
 .channel-type p{
     margin: 0;
     font-size: 14px;
-}
-.check-boxes{
-    padding-left: 15px;
-    padding-right: 15px;
+    color: var(--font-secondary);
 }
 .check svg{
-    margin-left: 8px;
     fill: var(--font-secondary);
-    margin-right: 6px;
 }
 .checker{
-    width: 16px;
-    height: 16px;
-    box-sizing: border-box;
+    width: 12px;
+    height: 12px;
     background-color: var(--blue);
     border-radius: 50%;
     cursor: pointer;
-    border: 3px var(--color) solid;
-    margin-left: 7px;
-    box-shadow: 0 0 0 2px var(--font-primary);
+    margin-left: auto;
+    outline: 2px var(--font-primary) solid;
+    outline-offset: 3px;
 }
-.check-boxes h5{
-    color: var(--font-secondary);
-    font-size: 14px;
-    margin-top: 14px;
-    margin-bottom: 4px;
+.checker.unchecked{
+    background-color: transparent;
 }
-.check-boxes input{
-    margin-bottom: 20px;
-}
-.check-boxes input:focus{
-    border-color: var(--cyan);
-}
-.create-channel{
-    width: 120px;
+.grammar{
+    margin-top: 15px;
+    margin-bottom: 5px;
+    display: block;
 }
 .cant-click{
-    cursor: not-allowed;
+    opacity: 0.5;
 }
 .channel-icon.channel-icon{
     width: 68px;
@@ -110,4 +132,16 @@
     inset: 0;
     margin: auto;
     fill: var(--font-primary);
+}
+.green-thing{
+    background-color: var(--green);
+    width: 100%;
+    height: 3px;
+    position: absolute;
+    bottom: 0;
+    border-radius: 2px;
+    display: none;
+}
+.green-thing.highlight{
+    display: block;
 }

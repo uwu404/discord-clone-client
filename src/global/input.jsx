@@ -1,15 +1,15 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
-const saveSelection = (containerEl, newText) => {
+const saveSelection = (containerEl, newTextLength) => {
     const range = window.getSelection().getRangeAt(0)
-    const preSelectionRange = range.cloneRange();
+    const preSelectionRange = range.cloneRange()
     preSelectionRange.selectNodeContents(containerEl)
     preSelectionRange.setEnd(range.startContainer, range.startOffset)
     const start = `${preSelectionRange}`.length
 
     return {
-        start: start + newText.length,
-        end: start + `${range}`.length + newText.length,
+        start: start + newTextLength,
+        end: start + `${range}`.length + newTextLength,
         pos: [start, `${range}`.length + start]
     }
 }
@@ -56,10 +56,13 @@ const getScrollParent = node => {
     return getScrollParent(node.parentNode)
 }
 
-const Input = ({ renderId, placeholder, defaultValue, innerRef, onPaste, onKeyDown, ...props }) => {
+const Input = ({ renderId, onChange, value, innerRef, placeholder, defaultValue, onPaste, onKeyDown, className, ...props }) => {
     const divRef = useRef()
+    const keepValue = useRef(defaultValue)
+    const [innerHTML, setInnerHTML] = useState({ selected: null, text: "" })
+
     const add = (el, text) => {
-        const savedSelection = saveSelection(el, text)
+        const savedSelection = saveSelection(el, text.length)
         el.textContent = el.textContent.slice(0, savedSelection.pos[0]) + text + el.textContent.slice(savedSelection.pos[1])
         setSelection(el, savedSelection)
     }
@@ -73,16 +76,23 @@ const Input = ({ renderId, placeholder, defaultValue, innerRef, onPaste, onKeyDo
         e.preventDefault()
         const text = e.clipboardData.getData("text")
         if (text) add(e.target, text)
+        handleInput(e)
         onPaste?.(e)
         scrollToBottom(e.target)
     }
 
     const handleKeyDown = (e) => {
-        if (e.code === "Backspace" && e.target.textContent.length <= 1) e.target.innerHTML = ""
         if (e.key === "z" && e.ctrlKey && !e.shiftKey) return
         if (e.code === "Enter" && e.shiftKey) return
         onKeyDown?.(e)
         scrollToBottom(e.target)
+        if (e.code === "Backspace" && e.target.innerText.length <= 1) e.target.innerHTML = ""
+        setTimeout(() => onChange?.(e), 1)
+        if (e.code === "Enter" && !e.defaultPrevented) {
+            e.preventDefault()
+            const selection = saveSelection(e.target, 1)
+            setInnerHTML(prev => ({ text: prev.text.slice(0, selection.pos[0]) + (selection.pos[1] !== prev.text.length ? "\n" : "\n\n") + prev.text.slice(selection.pos[1]).trim(), selected: selection }))
+        }
     }
 
     const handleDrop = e => {
@@ -91,25 +101,59 @@ const Input = ({ renderId, placeholder, defaultValue, innerRef, onPaste, onKeyDo
         e.target.textContent = e.target.textContent + text
         setSelection(e.target, { start: e.target.textContent.length - text.length, end: e.target.textContent.length })
         scrollToBottom(e.target)
+        handleInput(e)
+    }
+
+    const handleInput = (e) => {
+        const selection = saveSelection(e.target, 0)
+        setInnerHTML({
+            text: e.target.innerText,
+            selected: selection,
+        })
+        onChange?.(e)
     }
 
     useEffect(() => {
-        const input = divRef.current.lastChild
-        input.focus()
-        setSelection(input, { start: input.textContent.length, end: input.textContent.length })
+        if (value !== undefined) setInnerHTML(prev => ({ ...prev, text: value }))
+    }, [value])
+
+    useEffect(() => {
+        if (!keepValue.current) return
+        divRef.current.lastChild.focus()
+        const selection = saveSelection(divRef.current, keepValue.current?.length)
+        setInnerHTML({ selected: selection, text: keepValue.current })
+    }, [])
+
+    useEffect(() => {
+        if (innerHTML.selected) setSelection(document.activeElement, innerHTML.selected)
+    }, [innerHTML])
+
+    useEffect(() => {
+        if (renderId) {
+            const input = divRef.current.lastChild
+            input.focus()
+            setSelection(input, { start: input.textContent.length, end: input.textContent.length })
+        }
     }, [renderId])
 
     return (
         <div
             ref={divRef}
-            className="not-input"
+            className={"not-input " + className}
             onPaste={handlePaste}
             onDrop={handleDrop}
             onKeyDown={handleKeyDown}
             role="textbox"
+            spellCheck={false}
             {...props}>
-            <div ref={innerRef} suppressContentEditableWarning={true} placeholder={placeholder} contentEditable="true" className="plain-text">
-                {defaultValue}
+            <div
+                onInput={handleInput}
+                ref={innerRef}
+                suppressContentEditableWarning={true}
+                placeholder={placeholder}
+                contentEditable="true"
+                className="plain-text">
+                {innerHTML.text}
             </div>
         </div>
     )

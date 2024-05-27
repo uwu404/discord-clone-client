@@ -1,29 +1,34 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react"
 
-function useOutsideAlerter(ref, e, getEvent) {
+const useOutsideAlerter = (refs, e, getEvent) => {
     useEffect(() => {
 
-        function handleClickOutside(event) {
-            if (ref.current && !ref.current.contains(event.target)) {
+        const handleClickOutside = (event) => {
+            if (refs.current && refs.current.some(ref =>  !ref.contains(event.target))) {
                 if (getEvent) return e(event)
                 e?.()
             }
         }
 
-        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside)
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [ref, e, getEvent]);
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [refs, e, getEvent])
 }
 
 const Utils = {
-    Out({ click, children, getEvent}) {
-        const wrapperRef = useRef(null);
-        useOutsideAlerter(wrapperRef, click, getEvent);
-        return <div className="outer-div" ref={wrapperRef}>{children}</div>;
+    Out({ click, children, getEvent }) {
+        const childrenRef = useRef([])
+        useOutsideAlerter(childrenRef, click, getEvent)
+        
+        const clones = React.Children.map(children, (child, index) => React.cloneElement(child, {
+            ref: (ref) => (childrenRef.current[index] = ref)
+        }))
+
+        return clones
     },
-    isScolled(el, holder) {
+    isScrolled(el, holder) {
         holder = holder || document.body
         const { top, bottom, height } = el.getBoundingClientRect()
         const holderRect = holder.getBoundingClientRect()

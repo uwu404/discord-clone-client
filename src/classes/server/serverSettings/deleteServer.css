@@ -1,0 +1,33 @@
+.delete-server{
+    width: 450px;
+    background-color: var(--background-primary);
+    border-radius: 5px;
+    height: fit-content;
+    overflow: hidden;
+}
+.upper-section{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.ambatubedeleted{
+    margin-top: 0;
+    font-size: 21px;
+    color: var(--font-primary);
+}
+.stupid-question{
+    background-color: var(--yellow);
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 15px;
+    color: var(--font-primary)
+}
+.error-server{
+    color: var(--red);
+    font-size: 12px;
+    font-weight: 500;
+    display: block;
+    margin-top: 8px;
+    user-select: none;
+}

@@ -87,40 +87,6 @@
 .add-server:active{
     top: 1px;
 }
-.creator{
-    position: fixed;
-    top: 0; bottom: 0;
-    left: 0; right: 0;
-    margin: auto;
-    width: 420px;
-    height: fit-content;
-    overflow: hidden;
-    align-items: center;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    background-color: aliceblue;
-    z-index: 3;
-    user-select: none;
-}
-.view-server{
-    text-align: center;
-}
-.part-1 svg,
-.creator svg{
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    color: rgb(157, 156, 170);
-    cursor: pointer;
-    transform: rotate(0.125turn);
-    stroke-width: 5px;
-    stroke: aliceblue;
-}
-.creator h2{
-    margin-top: 19px;
-    color: black;
-}
 .dummy-text{
     color: rgb(133, 133, 133);
     margin-top: -4px;
@@ -128,107 +94,6 @@
     margin-right: 30px;
     font-weight: 400;
     font-size: 15px;
-}
-.selector{
-    width: 80px; height: 80px;
-    border: 3px var(--background-tertiary) dashed;
-    border-radius: 50%;
-    background: aliceblue;
-    overflow: hidden;
-    margin: auto;
-    margin-top: 20px;
-    position: relative;
-    margin-bottom: 30px;
-}
-.selector::before{
-    content: "UPLOAD";
-    color: var(--background-tertiary);
-    inset: 0;
-    margin: auto;
-    width: fit-content;
-    height: fit-content;
-    position: absolute;
-    font-size: 16px;
-    z-index: 0;
-    font-weight: 600;
-}
-.select-icon{
-    position: absolute;
-    width: 100%;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 2;
-    height: 100%;
-    border-radius: 50%;
-    top: 0;
-    left: 0;
-}
-.select-icon::-webkit-file-upload-button{
-    cursor: pointer;
-}
-.my-icon{
-    width: 100%;
-    z-index: 1;
-    height: 100%;
-    background-color: white;
-    position: absolute;
-    object-fit: cover;
-    left: 0;
-    top: 0;
-}
-.my-icon[src=""]{
-    display: none;
-}
-.select-server-name{
-    background-color: rgb(232, 239, 247);
-    outline: none;
-    color: black;
-    font-size: 16px;
-    border: 1px rgb(187, 187, 187) solid;
-    border-radius: 5px;
-    width: calc(94% - 30px);
-    transition: 0.2s;
-    padding: 4px 15px;
-    margin-top: 3px;
-    margin-bottom: 10px;
-    height: 35px;
-}
-.select-server-name:focus{
-    border-color: var(--cyan);
-}
-.select-server-name:invalid{
-    border-color: var(--red);
-}
-label[for="server"]{
-    color: var(--background-tertiary);
-    font-weight: 600;
-    font-size: 14px;
-    margin-right: auto;
-    margin-left: 12px;
-    justify-self: left;
-}
-.server-menu{
-    background-color: var(--background-floating);
-    position: fixed;
-    z-index: 3;
-    width: 220px;
-    transform-origin: 50% 0;
-    border-radius: 5px;
-    color: var(--font-primary);
-    left: 82px;
-    transition: 0.2s;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    box-sizing: border-box;
-    top: 55px;
-    padding: 8px 8px;
-}
-.clear-div.taller .animated-popup{
-    animation: taller 0.2s forwards;
-}
-.clear-div.shorter .animated-popup{
-    animation: shorter 0.21s forwards;
 }
 .server-menu p{
     border-radius: 3px;
@@ -238,7 +103,7 @@ label[for="server"]{
     user-select: none;
     box-sizing: border-box;
     width: 100%;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
 }
 .server-menu p:hover{

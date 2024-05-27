@@ -1,0 +1,13 @@
+.annihilator{
+    position: fixed;
+    z-index: 3;
+    padding-left: 20px;
+    cursor: default;
+}
+.status-list{
+    width: 200px;
+    height: fit-content;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: var(--background-floating);
+}

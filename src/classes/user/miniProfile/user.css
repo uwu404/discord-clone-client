@@ -1,0 +1,61 @@
+.user-avatar{
+    border-radius: 50%;
+    margin: 0;
+    -webkit-user-drag: none;
+    cursor: pointer;
+    object-fit: cover;
+}
+.user-username{
+    font-size: 19px;
+    color: var(--font-primary);
+    margin-top: 0;
+    margin-bottom: 5px;
+    user-select: text;
+    font-weight: 600;
+    padding: 3px 0;
+}
+.user-username-notag{
+    display: inline-block;
+}
+.user-username span{
+    color: var(--font-secondary);
+}
+.line{
+    background-color: var(--seperator);
+    height: 1px;
+}
+.line.first{
+    position: relative;
+    width: 100%;
+    margin: auto;
+}
+.mini-profile-content{
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    gap: 10px;
+}
+.dm-user{
+    background-color: transparent;
+    border-radius: 3px;
+    outline: none;
+    border: none;
+    height: 40px;
+    margin: auto;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0px 13px;
+    font-size: 14px;
+    color: var(--font-primary);
+    border: 1px var(--background-tertiary) solid;
+    transition: 0.4s;
+}
+.user-custom-status{
+    color: var(--icon-normal);
+    font-size: 14px;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+.user-custom-status:empty{
+    padding-bottom: 3px;
+}
